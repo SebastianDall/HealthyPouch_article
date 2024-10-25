@@ -1,7 +1,11 @@
+localDB
 .snakemake
 data/*
 !data/.gitkeep
-
+logs/*
+!logs/*
+output/*
+!output/*
 
 # History files
 .Rhistory
