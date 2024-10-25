@@ -3,9 +3,9 @@ localDB
 data/*
 !data/.gitkeep
 logs/*
-!logs/*
+!logs/.gitkeep
 output/*
-!output/*
+!output/.gitkeep
 
 # History files
 .Rhistory
