@@ -1,0 +1,52 @@
+# gtdb_tax
+import os
+import glob
+import shutil
+
+SNAKEDIR = os.path.dirname(workflow.snakefile)
+configfile: os.path.join(SNAKEDIR, "..", "config", "config.yaml")
+
+INPUT = config["INPUT"]
+OUTDIR = config["OUTDIR"]
+DB = config["DB"]
+EXTENSION = config["extension"]
+SKIP_ANI = config["skip_ani"]
+PPLACER_CPU = config["pplacer_cpu"]
+
+
+input_files = expand(os.path.join(INPUT, "{sample}.fa"), sample=glob_wildcards(os.path.join(INPUT, "{sample}.fa")).sample)[1:5]
+
+rule all:
+    input:
+        expand(os.path.join(OUTDIR, "gtdbtk.bac120.summary.tsv")), 
+        expand(os.path.join(OUTDIR, "gtdbtk.ar53.summary.tsv")),
+
+
+
+rule GTDB_classification: 
+    conda: 
+        "gtdbtk"
+    input: 
+        bins = input_files,
+    output: 
+        bact = os.path.join(OUTDIR, "gtdbtk.bac120.summary.tsv"),
+        arc = os.path.join(OUTDIR, "gtdbtk.ar53.summary.tsv")
+    threads: 40
+    params:
+        EXTENSION = EXTENSION,
+        PPLACER_CPU = PPLACER_CPU,
+        SKIP_ANI = SKIP_ANI,
+        OUTDIR = OUTDIR,
+        DB = DB,
+        GENOME_DIR = INPUT
+    shell:
+        """
+        export GTDBTK_DATA_PATH={params.DB}
+
+        gtdbtk classify_wf \
+            --cpus {threads} \
+            --genome_dir {params.GENOME_DIR} \
+            --extension {params.EXTENSION} \
+            {params.SKIP_ANI} \
+            --out_dir {params.OUTDIR}
+        """

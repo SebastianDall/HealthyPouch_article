@@ -1,0 +1,5 @@
+# arg_pred_sepseq
+ASSEMBLY_PATH: data/sepseq_assemblies/
+CONTIG_PATH: assembly.fasta
+OUTDIR: output/arg_pred_sepseq/
+DATABASE_JSON: data/databases/CARD_3.3.0/card.json

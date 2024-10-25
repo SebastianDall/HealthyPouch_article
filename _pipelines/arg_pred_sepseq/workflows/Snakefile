@@ -1,0 +1,40 @@
+# arg_pred_sepseq
+import os
+import glob
+import pandas as pd
+
+SNAKEDIR = os.path.dirname(workflow.snakefile) 
+
+configfile: os.path.join(SNAKEDIR, "..", "config", "config.yaml") 
+
+ASSEMBLY_PATH = config["ASSEMBLY_PATH"]
+CONTIG_PATH = config["CONTIG_PATH"]
+OUTDIR = config["OUTDIR"]
+DATABASE_JSON = config["DATABASE_JSON"]
+
+
+samples = [d for d in os.listdir(ASSEMBLY_PATH)][0:30]
+
+rule all: 
+    input:
+        expand(
+            os.path.join(OUTDIR, "{sample}", "{sample}.txt"),
+            sample=samples)
+
+
+rule rgi_main: 
+    conda: 
+        "rgi"
+    input: 
+        input_files=os.path.join(ASSEMBLY_PATH, "{sample}", CONTIG_PATH), 
+    output: 
+        output_txt=os.path.join(OUTDIR, "{sample}", "{sample}.txt"),
+        output_json=os.path.join(OUTDIR, "{sample}", "{sample}.json"),
+    params: 
+        card_json=DATABASE_JSON,
+    shell:
+            """
+            rgi load --card_json {params.card_json} --local && \
+            rgi main --input_sequence {input.input_files} --output_file {output.output_txt} --output_file {output.output_json} \
+            --local --clean -a DIAMOND --low_quality --include_nudge 
+            """

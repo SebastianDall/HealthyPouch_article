@@ -1,0 +1,86 @@
+---
+title: "ARG analysis"
+author: "Alberte"
+date: "10/21/2024"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(tidyverse)
+```
+
+# ARG analysis - OLD 
+
+R markdown used to assess the ARG pipeline output
+
+INDTIL VIDERE ER DET UDFRA DET MIDLERTIDIGE OUTPUT
+```{r}
+
+rgi <- read_delim("/home/projects/cu_00014/people/albmol/healthypouch/HealthyPouch_article/output/arg_rgi_old/NP-RASK00000035MP/NP-RASK00000035MP.rgi_main.txt", delim = "\t") 
+
+rgi_mod <- rgi %>% 
+  filter((Cut_Off == "Perfect") | (Cut_Off == "Strict" & Best_Identities > 80)) %>% 
+  filter(grepl("fluoroquinolone|nitroimidazole|beta-lactams|glycopeptide|ansamycin", `Drug Class`)) %>% 
+  group_by(Contig) %>%        # Group by the Contig column
+  filter(n() > 1) %>%         # Keep only groups with more than one row
+  ungroup()  
+
+
+rgi_mod_perfect <- rgi_mod %>%  
+  filter(Cut_Off == "Perfect")
+
+
+
+rgi_40 <- read_delim("/home/projects/cu_00014/people/albmol/healthypouch/HealthyPouch_article/output/arg_rgi_old/NP-RASK00000040MP/NP-RASK00000040MP.rgi_main.txt", delim = "\t")
+
+
+
+
+rgi_specific_ab <- rgi %>%  filter(grepl("fluoroquinolone|nitroimidazole|beta-lactams|glycopeptide|ansamycin", `Drug Class`)) %>%  
+   slice(45:49) %>% 
+  select(Contig, Cut_Off, Pass_Bitscore:Best_Identities, Model_type, `Drug Class`)
+  
+45-49
+```
+
+
+
+# ARG analysis
+
+```{r}
+arg_combined_d <- read_delim("/home/projects/cu_00014/people/albmol/healthypouch/HealthyPouch_article/output/arg_rgi_combined/combined_arg_rgi.txt", delim = "\t") %>% 
+  filter(Cut_Off == "Perfect")
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
