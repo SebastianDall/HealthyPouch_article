@@ -1,6 +1,0 @@
-INPUT: data/20240224_single_sample_binning_bins/
-OUTDIR: output/gtdb_class_20240224_single_sample_binning/
-DB: data/databases/gtdb_r220/release220/
-pplacer_cpu: 40
-extension: "fa"
-skip_ani: "--skip_ani_screen"
