@@ -6,6 +6,17 @@ logs/*
 !logs/.gitkeep
 output/*
 !output/.gitkeep
+plots/*
+!plots/.gitkeep
+_pipelines/*
+!_pipelines/.gitkeep
+analysis/*
+!analysis/.gitkeep
+html/*
+!html/.gitkeep
+scripts*
+!scripts/.gitkeep
+
 
 # History files
 .Rhistory
