@@ -1,6 +1,0 @@
-# arg_contigs
-#FULL_PATH: /home/projects/cu_00014/data/healthypouch/binning/20240224_single_sample_binning/<sample>/tmp/eukfilt/asm_pol_lenfilt_eukfilt.fasta
-ASSEMBLY_PATH: data/20240224_single_sample_binning_assemblies/
-CONTIG_PATH: asm_pol_lenfilt_eukfilt.fasta
-OUTDIR: output/arg_rgi/
-DATABASE_JSON: data/databases/CARD_3.3.0/card.json
