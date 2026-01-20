@@ -1,0 +1,4 @@
+outdir: "path/dir"
+bins_path: path/to/bins/directory
+mgedb: path/to/db
+baktadb: path/to/db
