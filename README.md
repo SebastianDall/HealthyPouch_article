@@ -4,7 +4,7 @@
 This repository contains the code used for generating the microbiome analysis. 
 
 `data/` contains: 
- - `data/methylation_plot/`: Contains the data needed to generate the plots in `analysis/methylation_plot.R`:</li>
+ - `data/methylation_plot/`: Contains the data needed to generate the plots in `analysis/methylation_plot.R`.
  - `data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt`: MetaPhlAn taxonomic profile generated from short-read metagenomic data. </li>
  - `data/gyr_arg.csv`: Contains the data needed to generate Table 2.</li>
  - `data/mag_qual.tsv`: Contains the MIMAG quality classifications for generated MAGs.</li>
