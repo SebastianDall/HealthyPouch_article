@@ -1,0 +1,4 @@
+bin Completeness Contamination Completeness_Model_Used Translation_Table_Used Coding_Density contig_n50 Average_Gene_Length Genome_Size GC_Content Total_Coding_Sequences Total_Contigs Max_Contig_Length Additional_Notes cov
+NP-PaPr00000088MP.bin.1.1 100 0.1 "Neural Network (Specific Model)" 11 0.877 3666924 311.1491075315629 4881043 0.51 4594 3 3666924 None 932.4069586686358
+NP-PaPr00000088MP.bin.1.2 99.99 2.18 "Neural Network (Specific Model)" 11 0.831 390989 263.1312796208531 1998491 0.39 2110 11 513409 None 76.52010969921805
+NP-PaPr00000088MP.bin.1.3 100 0.03 "Neural Network (Specific Model)" 11 0.832 2336467 316.3494436717663 3276652 0.28 2876 4 2336467 None 71.97226156504118
