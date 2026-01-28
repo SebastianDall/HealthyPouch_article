@@ -1,0 +1,5 @@
+# arg_contigs
+ASSEMBLY_PATH: path/to/data/
+CONTIG_PATH: path/to/assembly/file.fasta  tmp/eukfilt/asm_pol_lenfilt_eukfilt.fasta
+OUTDIR: output/dir/
+DATABASE_JSON: path/to/card/database

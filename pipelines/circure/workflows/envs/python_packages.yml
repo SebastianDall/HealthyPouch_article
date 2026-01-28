@@ -1,0 +1,8 @@
+name: python_packages
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - python
+  - pandas 

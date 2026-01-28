@@ -1,0 +1,4 @@
+# viral_iden
+INPUT_PATH: path/to/assembly/dir/
+INPUT_FASTA: assembly_file.fasta
+OUTDIR: path/to/output/dir/

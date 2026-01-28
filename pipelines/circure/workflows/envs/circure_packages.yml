@@ -1,0 +1,12 @@
+name: circure_packages
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base
+  - r-tidyverse
+  - r-data.table
+  - r-dplyr
+  - r-essentials
+  - r-future
+  - r-future.apply 

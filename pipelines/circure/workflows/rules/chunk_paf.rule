@@ -1,0 +1,27 @@
+import os
+import glob
+
+# generate a list of .paf files from the directory
+paf_files = glob.glob(os.path.join(data_directory, "*.paf"))
+paf_files2 = [f.split("/")[-1].split(".paf")[0] for f in paf_files]
+print(paf_files2)
+
+rule chunk_paf:
+    input:
+        os.path.join(config["data_directory"], "{samples}.paf")
+    output:
+        os.path.join(config["output_directory"], "chunks_report", "chunks_report_{samples}.tsv")
+    params:
+        directory(os.path.join(config["output_directory"], "chunks"))
+    threads:
+        1
+    resources:
+        mem="50G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    conda: 
+        config["envs_directory"] + "/python_packages.yml"
+    shell:
+        """
+        python {config[scripts_directory]}/chunk_paf.py {input} {params} {output}
+        """

@@ -1,0 +1,77 @@
+# annotate_plasmid
+import os
+import glob
+import pandas as pd
+
+SNAKEDIR = os.path.dirname(workflow.snakefile) 
+
+configfile: os.path.join(SNAKEDIR, "..", "config", "config.yaml") 
+
+DB_DIAMOND = config["DB_DIAMOND"]
+DB_METADATA = config["DB_METADATA"]
+ASSEMBLY_PATH = config["ASSEMBLY_PATH"]
+CONTIG_PATH = config["CONTIG_PATH"]
+OUTDIR = config["OUTDIR"]
+SAMPLE_NAME = config["SAMPLE_NAME"]
+CONTIG_NAME = config["CONTIG_NAME"]
+MOBILE_OG_SCRIPT = config["MOBILE_OG_SCRIPT"]
+FOLDER = config["FOLDER"]
+
+
+
+rule all: 
+    input:
+        os.path.join(OUTDIR, FOLDER, f"{SAMPLE_NAME}_{CONTIG_NAME}.fasta.summary.csv")
+
+
+rule extract_contig: 
+    input: 
+        assembly_file = os.path.join(ASSEMBLY_PATH, SAMPLE_NAME, CONTIG_PATH), 
+    output: 
+        extracted_plasmid = os.path.join(OUTDIR, FOLDER, f"{SAMPLE_NAME}_{CONTIG_NAME}.fasta"), 
+    threads:
+        4
+    resources:
+        mem="5G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell: 
+        """
+        awk '/^>/{{flag=0}} /^>{CONTIG_NAME}$/{{flag=1}} flag' {input.assembly_file} > {output.extracted_plasmid}
+        """
+
+rule mobile_og: 
+    conda:
+        "mobileOG-db"
+    input: 
+       extracted_plasmid = os.path.join(OUTDIR, FOLDER, f"{SAMPLE_NAME}_{CONTIG_NAME}.fasta"),
+    output: 
+        output_csv = os.path.join(OUTDIR, FOLDER, f"{SAMPLE_NAME}_{CONTIG_NAME}.fasta.summary.csv"),
+    params: 
+        db_diamond = DB_DIAMOND,
+        db_metadata = DB_METADATA,
+        kvalue = 15,
+        evalue = 1e-20,
+        pident = 90,
+        qcov = 90, 
+        script_path = MOBILE_OG_SCRIPT,
+    threads:
+        4
+    resources:
+        mem="5G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell: 
+        """
+        {params.script_path}/mobileOGs-pl-kyanite.sh \
+        -i {input.extracted_plasmid} \
+        -d {params.db_diamond} \
+        -m {params.db_metadata} \
+        -k {params.kvalue} \
+        -e {params.evalue} \
+        -p {params.pident} \
+        -q {params.qcov} \
+        """
+
+
+

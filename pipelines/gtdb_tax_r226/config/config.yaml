@@ -1,0 +1,8 @@
+# gtdb_tax_r226
+OUTDIR: path/to/output/dir/
+DB: path/to/database/
+pplacer_cpu: 16
+extension: "fa"
+skip_ani: "--skip_ani_screen"
+BATCH_INPUT: path/to/bins/
+

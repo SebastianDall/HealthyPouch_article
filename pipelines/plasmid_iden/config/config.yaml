@@ -1,0 +1,7 @@
+# plasmid_iden
+INPUT_PATH: path/to/assemblies/
+INPUT_FASTA: addembly_file.fasta
+OUTDIR: output/dir/
+HMM_VIRALVERIFY: path/to/databases/viralverify_hmms/nbc_hmms.hmm
+DB_PLASMER: path/to/databases/plasmer/
+DB_GENOMAD: path/to/databases/genomad/
