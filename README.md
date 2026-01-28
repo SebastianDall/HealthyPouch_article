@@ -29,6 +29,7 @@ data/pipelines/analysis
 </ul>
 
 
+[Validate contig circularity](pipelines/circure/README.md)
 
 `pipelines` contains: 
 <ul>
