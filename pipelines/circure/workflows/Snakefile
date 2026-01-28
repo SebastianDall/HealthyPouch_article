@@ -1,0 +1,26 @@
+# circure
+import os
+import glob
+
+
+SNAKEDIR = os.path.dirname(workflow.snakefile) 
+
+configfile: os.path.join(SNAKEDIR, "..", "config", "config.yaml") 
+
+data_directory = config["data_directory"]
+output_directory = config["output_directory"]
+
+#PART 1
+include: os.path.join(config["rules_directory"], "chunk_paf.rule")
+
+rule all:
+    input:
+        expand(os.path.join(config["output_directory"], "chunks_report", "chunks_report_{samples}.tsv"), samples=paf_files2)
+
+
+#PART 2
+# include: os.path.join(config["rules_directory"], "running_circure.rule")
+
+# rule all:
+#     input:
+#         expand(os.path.join(config["output_directory"], "circure_chunks", "{samples_chunks}.tsv"), samples_chunks=chunks2)

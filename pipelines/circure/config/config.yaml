@@ -1,0 +1,6 @@
+# circure
+output_directory: path/to/output/dir/
+scripts_directory: pipelines/circure/workflows/scripts
+data_directory: path/to/input/dir/
+rules_directory: pipelines/circure/workflows/rules/
+envs_directory: pipelines/circure/workflows/envs/

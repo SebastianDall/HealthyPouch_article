@@ -1,0 +1,111 @@
+# plasmid_iden
+import os
+import glob
+import pandas as pd
+
+SNAKEDIR = os.path.dirname(workflow.snakefile) 
+
+configfile: os.path.join(SNAKEDIR, "..", "config", "config.yaml") 
+
+INPUT_PATH = config["INPUT_PATH"]
+INPUT_FASTA = config["INPUT_FASTA"]
+OUTDIR = config["OUTDIR"]
+HMM_VIRALVERIFY = config["HMM_VIRALVERIFY"]
+DB_PLASMER = config["DB_PLASMER"]
+DB_GENOMAD = config["DB_GENOMAD"]
+
+
+samples = [d for d in os.listdir(INPUT_PATH)]
+
+rule all: 
+    input:
+        expand(os.path.join(OUTDIR, "viralverify", "{sample}"), sample=samples),
+        expand(os.path.join(OUTDIR, "plasmer", "{sample}"), sample=samples),
+        expand(os.path.join(OUTDIR, "plasmidhunter", "{sample}"), sample=samples),
+        expand(os.path.join(OUTDIR, "genomad", "{sample}"), sample=samples),
+
+rule viralverify: 
+    conda: 
+        "viralverify"
+    input: 
+        input_files=os.path.join(INPUT_PATH, "{sample}", INPUT_FASTA), 
+    output: 
+        dir=directory(os.path.join(OUTDIR, "viralverify", "{sample}")),
+    params: 
+        db=HMM_VIRALVERIFY,
+    threads:
+        1
+    resources:
+        mem="30G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell:
+            """
+            viralverify -f {input.input_files} -o {output.dir} --hmm {params.db} 
+            """
+
+
+rule plasmer: 
+    conda: 
+        "plasmer"
+    input: 
+        input_files=os.path.join(INPUT_PATH, "{sample}", INPUT_FASTA), 
+    output: 
+        dir=directory(os.path.join(OUTDIR, "plasmer", "{sample}")),
+    params: 
+        db=DB_PLASMER, 
+        minimum_length=500,
+        length=0,
+    threads:
+        1
+    resources:
+        mem="30G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell: 
+        """
+        Plasmer -g {input} -d {params.db} -m {params.minimum_length} -l {params.length} -o {output.dir} 
+        """
+
+
+rule plasmidhunter: 
+    conda: 
+        "plasmidhunter"
+    input: 
+        input_files=os.path.join(INPUT_PATH, "{sample}", INPUT_FASTA),
+    output: 
+        dir=directory(os.path.join(OUTDIR, "plasmidhunter", "{sample}")),
+    threads: 
+        1
+    resources:
+        mem="30G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell: 
+        """
+        plasmidhunter -i {input.input_files} -o {output.dir} --cpu {threads}
+        """
+
+
+
+rule genomad: 
+    conda: 
+        "genomad"
+    input: 
+        input_files=os.path.join(INPUT_PATH, "{sample}", INPUT_FASTA),
+    output: 
+        dir=directory(os.path.join(OUTDIR, "genomad", "{sample}")),
+    params:
+        db=DB_GENOMAD,
+    threads:
+        1
+    resources:
+        mem="30G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell: 
+        """
+        genomad end-to-end {input.input_files} {output.dir} {params.db} 
+        """
+
+

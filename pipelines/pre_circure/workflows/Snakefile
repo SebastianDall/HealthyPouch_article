@@ -1,0 +1,68 @@
+# pre_circure
+import os
+import glob
+import pandas as pd
+
+SNAKEDIR = os.path.dirname(workflow.snakefile) 
+
+configfile: os.path.join(SNAKEDIR, "..", "config", "config.yaml") 
+
+READ_PATH = config["READ_PATH"]
+ASSEMBLY_PATH = config["ASSEMBLY_PATH"]
+CONTIG_PATH = config["CONTIG_PATH"]
+OUTDIR = config["OUTDIR"]
+
+
+samples = [d for d in os.listdir(ASSEMBLY_PATH)]
+
+
+rule all: 
+    input:
+        expand(
+            os.path.join(OUTDIR, "modified_output", "{sample}.paf"), 
+            sample=samples)
+
+def samplebarcode(wildcards):
+    file_name = wildcards.sample 
+    file_name = file_name.split("-")[1]  
+    unique_path = os.path.join(READ_PATH, file_name, file_name + "_NonHuman_unique.fastq.gz")
+    fallback_path = os.path.join(READ_PATH, file_name, file_name + "_NonHuman.fastq.gz")
+    return unique_path if os.path.exists(unique_path) else fallback_path
+
+
+rule minimap: 
+    conda: 
+        "minimap2"
+    input:  
+        input_reads = lambda wildcards: samplebarcode(wildcards),
+        input_assembly=os.path.join(ASSEMBLY_PATH, "{sample}", CONTIG_PATH), 
+    output: 
+        output_paf=os.path.join(OUTDIR, "raw_output", "{sample}.paf"),
+    params: 
+        threads=10,
+    resources:
+        mem="40G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell:
+            """
+            minimap2 -cx lr:hq --secondary=no -o {output.output_paf} {input.input_assembly} {input.input_reads} -t {params.threads}
+            """
+
+
+rule modify_output: 
+    input: 
+        input_paf = os.path.join(OUTDIR, "raw_output", "{sample}.paf"), 
+    output: 
+        output_paf=os.path.join(OUTDIR, "modified_output", "{sample}.paf"),
+    resources:
+        mem="5G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell:
+            """
+            #awk 'NR<=11 {{print; next}} NR>11' {input.input_paf} > {output.output_paf}
+            awk 'BEGIN {{OFS=\"\\t\"}} {{print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11}}' {input.input_paf} > {output.output_paf}
+            """
+    
+

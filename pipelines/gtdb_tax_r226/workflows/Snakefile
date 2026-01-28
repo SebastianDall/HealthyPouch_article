@@ -1,0 +1,60 @@
+# gtdb_tax_r226
+import os
+import glob
+import shutil
+
+SNAKEDIR = os.path.dirname(workflow.snakefile)
+configfile: os.path.join(SNAKEDIR, "..", "config", "config.yaml")
+
+OUTDIR = config["OUTDIR"]
+DB = config["DB"]
+EXTENSION = config["extension"]
+SKIP_ANI = config["skip_ani"]
+PPLACER_CPU = config["pplacer_cpu"]
+BATCH_INPUT = config["BATCH_INPUT"]
+
+batch_dirs = sorted([os.path.basename(d) for d in glob.glob(os.path.join(BATCH_INPUT, "batch_*")) if os.path.isdir(d)])
+
+rule all:
+    input:
+        expand(os.path.join(OUTDIR, "{batch}", "gtdbtk.bac120.summary.tsv"), batch=batch_dirs),
+        expand(os.path.join(OUTDIR, "{batch}", "gtdbtk.ar53.summary.tsv"), batch=batch_dirs)
+
+
+rule GTDB_classification: 
+    conda: 
+        "gtdbtk_2.4.1"
+    input:
+        lambda wildcards: glob.glob(os.path.join(BATCH_INPUT, wildcards.batch, f"*.{EXTENSION}"))
+    output:
+        bact = os.path.join(OUTDIR, "{batch}", "gtdbtk.bac120.summary.tsv"),
+        arc = os.path.join(OUTDIR, "{batch}", "gtdbtk.ar53.summary.tsv")
+    threads: 16
+    resources:
+        mem="120G",
+        walltime="10:00:00:00",
+        nodetype="thinnode",
+    params:
+        EXTENSION = EXTENSION,
+        PPLACER_CPU = PPLACER_CPU,
+        SKIP_ANI = SKIP_ANI,
+        OUTDIR = os.path.join(OUTDIR, "{batch}"),
+        DB = DB,
+        GENOME_DIR = lambda wildcards: os.path.join(BATCH_INPUT, wildcards.batch), 
+    shell:
+        """
+        export GTDBTK_DATA_PATH={params.DB}
+
+        gtdbtk classify_wf \
+            --cpus {threads} \
+            --genome_dir {params.GENOME_DIR} \
+            --extension {params.EXTENSION} \
+            {params.SKIP_ANI} \
+            --out_dir {params.OUTDIR} 
+
+        if [ ! -f "{output.arc}" ]; then
+        echo "No archaeal genomes classified." > "{output.arc}"
+        fi
+        """
+        
+        

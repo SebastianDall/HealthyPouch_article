@@ -1,0 +1,25 @@
+import os
+import glob
+
+# generate a list of .paf files from the directory
+chunks1 = glob.glob(os.path.join(output_directory, "chunks", "*", "*.paf"))
+chunks2 = [f.split("/")[-1].split(".paf")[0] for f in chunks1]
+
+rule running_circure:
+    input:
+        os.path.join(config["output_directory"], "chunks", "{samples_chunks}/{samples_chunks}.paf")
+    output:
+        os.path.join(config["output_directory"], "circure_chunks", "{samples_chunks}.tsv")
+    conda:
+        config["envs_directory"] + "/circure_packages.yml"
+    threads: 
+        1
+    resources:
+        mem="50G",
+        walltime="7:00:00:00",
+        nodetype="thinnode",
+    shell:
+        """
+        Rscript {config[scripts_directory]}/running_circure.R {input} {output}
+        """
+

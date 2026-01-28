@@ -1,0 +1,10 @@
+# annotate_plasmid
+ASSEMBLY_PATH: path/to/assemblies/
+CONTIG_PATH: assembly_file.fasta 
+SAMPLE_NAME: sample_name
+CONTIG_NAME: contig_name
+OUTDIR: output/annotate_plasmid/
+FOLDER: folder_name
+DB_DIAMOND: path/to/database/file.dmnd
+DB_METADATA: path/to/metadata/file.csv
+MOBILE_OG_SCRIPT: pipelines/annotate_plasmid/workflows

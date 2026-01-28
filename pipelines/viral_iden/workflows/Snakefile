@@ -1,0 +1,37 @@
+# viral_iden
+import os
+import glob
+import pandas as pd
+
+SNAKEDIR = os.path.dirname(workflow.snakefile) 
+
+configfile: os.path.join(SNAKEDIR, "..", "config", "config.yaml") 
+
+INPUT_PATH = config["INPUT_PATH"]
+INPUT_FASTA = config["INPUT_FASTA"]
+OUTDIR = config["OUTDIR"]
+
+
+samples = [d for d in os.listdir(INPUT_PATH)]
+
+rule all: 
+    input:
+        expand(os.path.join(OUTDIR, "virsorter2", "{sample}"), sample=samples),
+
+rule virsorter2: 
+    conda: 
+        "virsorter2"
+    input: 
+        input_files=os.path.join(INPUT_PATH, "{sample}", INPUT_FASTA), 
+    output: 
+        dir=directory(os.path.join(OUTDIR, "virsorter2", "{sample}")),
+    threads:
+        4
+    resources:
+        mem="5G",
+        walltime="5:00:00:00",
+        nodetype="thinnode",
+    shell:
+            """
+            virsorter run -w {output.dir} -i {input.input_files} 
+            """

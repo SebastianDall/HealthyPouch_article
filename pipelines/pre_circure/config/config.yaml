@@ -1,0 +1,5 @@
+# pre_circure
+READ_PATH: path/to/sequencing/reads/
+ASSEMBLY_PATH: path/to/assemblies/
+CONTIG_PATH: path/to/contig/file.fasta
+OUTDIR: path/to/output/dir/
