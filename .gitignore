@@ -2,6 +2,12 @@ localDB
 .snakemake
 data/*
 !data/.gitkeep
+!data/participant_metadata.csv
+!data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt
+!data/mag_qual.tsv
+!data/methylation_plot/
+!data/gyr_arg.csv
+!data/par_arg.csv
 logs/*
 !logs/.gitkeep
 output/*
@@ -12,10 +18,16 @@ _pipelines/*
 !_pipelines/.gitkeep
 analysis/*
 !analysis/.gitkeep
+!analysis/alpha_diversity.R
+!analysis/heatmap.R
+!analysis/rda.R
+!analysis/methylation_plot.R
+!analysis/plasmid_plot.R
 html/*
 !html/.gitkeep
 scripts*
 !scripts/.gitkeep
+redo_samples.txt*
 
 
 # History files
