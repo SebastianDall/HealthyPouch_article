@@ -3,63 +3,37 @@
 ## Microbiome Analysis
 This repository contains the code used for generating the microbiome analysis. 
 
-data/pipelines/analysis
-
-´data´ contains
-
-`data` contains: 
-<ul>
-  <li>`data/methylation_plot/`: Contains the data needed to generate the plots in `analysis/methylation_plot.R`:</li>
-  <li>`data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt`: MetaPhlAn taxonomic profile generated from short-read metagenomic data. </li>
-  <li>`data/gyr_arg.csv`: Contains the data needed to generate Table 2.</li>
-  <li>`data/mag_qual.tsv`: Contains the MIMAG quality classifications for generated MAGs.</li>
-  <li>`data/par_arg.csv`: Contains the data needed to generate Table 2.</li>
-  <li>`data/participant_metadata.csv`: Contains the metadata for the included participants. </li>
-</ul>
-
+`data/` contains: 
+ - `data/methylation_plot/`: Contains the data needed to generate the plots in `analysis/methylation_plot.R`:</li>
+ - `data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt`: MetaPhlAn taxonomic profile generated from short-read metagenomic data. </li>
+ - `data/gyr_arg.csv`: Contains the data needed to generate Table 2.</li>
+ - `data/mag_qual.tsv`: Contains the MIMAG quality classifications for generated MAGs.</li>
+ - `data/par_arg.csv`: Contains the data needed to generate Table 2.</li>
+ - `data/participant_metadata.csv`: Contains the metadata for the included participants. </li>
 
 `analysis` contains: 
-<ul>
-  <li>`data/methylation_plot/`: Contains the data needed to generate the plots in `analysis/methylation_plot.R`:</li>
-  <li>`data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt`: </li>
-  <li>`data/gyr_arg.csv`: </li>
-  <li>`data/mag_qual.tsv`: </li>
-  <li>`data/par_arg.csv`: </li>
-  <li>`data/methylation_plot/`: </li>
-</ul>
+ - `analysis/alpha_diversity.R`: script used to generate plot A and B in Figure 1.
+ - `analysis/heatmap.R`: script used to generate plot C in Figure 1.
+ - `analysis/methylation_plot.R`: script used to generate plot B in Figure 3 and Supplementary Figured 1 and 2.
+ - `analysis/plasmid_plot.R`: script used to generate plot A in Figure 3 and Supplementary Figures 1 and 2.
+ - `analysis/rda.R`: script used to generate plot D in Figure 1.
 
+`pipelines/` contains workflows to: 
+ - [Annotate plasmids](pipelines/annotate_plasmid/README.md) 
+ - [Identify ARGs](pipelines/arg_contigs/README.md)
+ - [Validate contig circularity](pipelines/circure/README.md)
+ - [Taxonomically classify MAGs](pipelines/gtdb_tax_r226/README.md)
+ - [Bin assembled contigs](pipelines/mmlong2-lite/README.md)
+ - [Identify plasmids](pipelines/plasmid_iden/README.md)
+ - [Prepare for contig circularity validation](pipelines/pre_circure/README.md)
+ - [Identify virus](pipelines/viral_iden/README.md)
 
- - `pipelines` contains: 
- - [Annotate plasmid args](plasmids/arg_pipelie/README.md)   </li>
- - [Validate contig circularity](pipelines/circure/README.md)   </li>
- - `data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt`: </li>
- - `data/gyr_arg.csv`: </li>
- - `data/mag_qual.tsv`: </li>
- - `data/par_arg.csv`: </li>
- - `data/methylation_plot/`: </li>
-
-
-
-
-Microbiome Analysis
-This repository contains the code used for generating the microbiome analysis. All scripts for code generation can be found in src folder.
-
-An external library is needed, which can be installed as:
-
-remotes::install_github("SebastianDall/mplibrary")
-
-Scripts are:
-
-src/heatmaps.Rmd: Produces heatmaps of the relative abundance of the top most abundant species.
-src/alpha-beta_diversity.Rmd: Produces alpha and beta diversity plots.
-src/ordinationplot.Rmd: Produces ordination plots.
-Richness was defined as species with a relative abundance >0 and alpha diversity was calculated using the Shannon diversity index. Patient sample similarity to donors were calculated using both Sørensen coefficient on relative abundances and Bray-Curtis on Hellinger transformed relative abundances. The similarity would be measured as the median similarity to donor samples received and also as median similarity to a donor sample from each donor not received. For the placebo group, similarity was calculated as the median similarity to a donor sample from each donor used in the FMT group.
 
 ## Prerequisites
 All data was analyzed using R (4.1.0) and RStudio.
 
 ## Data
-Sequencing data is available at PRJEB66493 & PRJEB80556. To rerun the workflow install snakemake and run the snakemake pipeline as:
-
+All DNA sequences have been deposited at the European Nucleotide Archive under the accession number PRJEB98069. Additionally, we incorporated data from previous studies, which are publicly available under the accession numbers PRJEB80556, PRJEB6649
 
 ## Cite 
+Please cite our preprint: 
