@@ -29,19 +29,14 @@ data/pipelines/analysis
 </ul>
 
 
-[Validate contig circularity](pipelines/circure/README.md)
-
-`pipelines` contains: 
-<ul>
-  <li>[Annotate plasmid args](plasmids/arg_pipelie/README.md)   </li>
-  <li>[Validate contig circularity](pipelines/circure/README.md)   </li>
-  <li>`data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt`: </li>
-  <li>`data/gyr_arg.csv`: </li>
-  <li>`data/mag_qual.tsv`: </li>
-  <li>`data/par_arg.csv`: </li>
-  <li>`data/methylation_plot/`: </li>
-</ul>
-
+ - `pipelines` contains: 
+ - [Annotate plasmid args](plasmids/arg_pipelie/README.md)   </li>
+ - [Validate contig circularity](pipelines/circure/README.md)   </li>
+ - `data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt`: </li>
+ - `data/gyr_arg.csv`: </li>
+ - `data/mag_qual.tsv`: </li>
+ - `data/par_arg.csv`: </li>
+ - `data/methylation_plot/`: </li>
 
 
 
