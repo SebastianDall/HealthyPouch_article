@@ -38,7 +38,7 @@ All data was analyzed using R (4.1.0) and RStudio.
 All DNA sequences have been deposited at the European Nucleotide Archive under the accession number PRJEB98069. Additionally, we incorporated data from previous studies, which are publicly available under the accession numbers PRJEB80556, PRJEB6649
 
 A script can be found with the accession and overview of all uploaded data at: `data/filereport_read_run_PRJEB98069.tsv`.
-The files `data/PaPr_metadata.tsv` `data/PaOP_metadata.tsv` and `data/donor_metadata.tsv` contains a `sample_barcode` column that matches the `sample_title` of the download script.
+The files `data/hp_included_participants.csv`, `data/PaPr_metadata.tsv`, `data/PaOP_metadata.tsv`, and `data/donor_metadata.tsv` contains a `sample_barcode` column that matches the `sample_title` of the download script.
 
 ## Cite 
 Please cite our preprint: 
