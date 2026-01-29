@@ -14,6 +14,7 @@ This repository contains the code used for generating the microbiome analysis.
 `analysis` contains: 
  - [`alpha_diversity.R`](analysis/alpha_diversity.R): script used to generate plot A and B in Figure 1.
  - [`heatmap.R`](analysis/heatmap.R): script used to generate plot C in Figure 1.
+ - [`mag_qual.R`](analysis/mag_qual.R): script used to make figure 2. This one requires several files that can be found in the gtdb release 226 folder. Paths in the script will have to be adjusted.
  - [`methylation_plot.R`](analysis/methylation_plot.R): script used to generate plot B in Figure 3 and Supplementary Figured 1 and 2.
  - [`plasmid_plot.R`](analysis/plasmid_plot.R): script used to generate plot A in Figure 3 and Supplementary Figures 1 and 2.
  - [`rda.R`](analysis/rda.R): script used to generate plot D in Figure 1.
