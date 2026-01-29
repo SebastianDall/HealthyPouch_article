@@ -1,0 +1,5 @@
+outdir: "bakta"
+bins_path: /home/projects/cu_00014/people/albmol/healthypouch/HealthyPouch_article/data/mmlong2_lite_collected_bins/
+mgedb: /home/projects/cu_00014/data/databases/mgedb
+baktadb: /home/projects/cu_00014/data/databases/bakta_5.1_2024_01_19/db
+
