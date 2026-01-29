@@ -13,46 +13,46 @@ base_mags = [m.rsplit(".fa")[0] for m in mags]
 rule all:
   input:
     os.path.join("bakta", "annotation_summary.tsv"),
-    os.path.join("bakta", "mefinder.tsv")
+    # os.path.join("bakta", "mefinder.tsv")
 
-rule mefinder:
-  conda: "mobile_element_finder_env"
-  input:
-    os.path.join(path, "{mag}.fa")
-  output:
-    os.path.join(config["outdir"], "{mag}", "mobile_element_finder", "{mag}_mef.csv.csv.csv")
-  threads: 4
-  resources:
-    walltime = "1:00:00",
-    mem = "15G",
-  params:
-    db = config["mgedb"],
-    o = os.path.join(config["outdir"], "{mag}", "mobile_element_finder", "{mag}_mef.csv.csv")
-  shell:
-    """
-    mefinder find -c {input} --db-path {params.db} --threads {threads} {params.o}
-    """
+# rule mefinder:
+#   conda: "mobile_element_finder_env"
+#   input:
+#     os.path.join(path, "{mag}.fa")
+#   output:
+#     os.path.join(config["outdir"], "{mag}", "mobile_element_finder", "{mag}_mef.csv.csv.csv")
+#   threads: 4
+#   resources:
+#     walltime = "1:00:00",
+#     mem = "15G",
+#   params:
+#     db = config["mgedb"],
+#     o = os.path.join(config["outdir"], "{mag}", "mobile_element_finder", "{mag}_mef.csv.csv")
+#   shell:
+#     """
+#     mefinder find -c {input} --db-path {params.db} --threads {threads} {params.o}
+#     """
 
-rule concat_mefinder:
-  input:
-    files = expand(os.path.join(config["outdir"], "{mag}", "mobile_element_finder", "{mag}_mef.csv.csv.csv"), mag = base_mags)
-  output:
-    o = os.path.join(config["outdir"], "mefinder.tsv")
-  threads: 1
-  resources:
-    walltime = "1:00:00",
-    mem = "15G",
-  run:
-    dfs = []
+# rule concat_mefinder:
+#   input:
+#     files = expand(os.path.join(config["outdir"], "{mag}", "mobile_element_finder", "{mag}_mef.csv.csv.csv"), mag = base_mags)
+#   output:
+#     o = os.path.join(config["outdir"], "mefinder.tsv")
+#   threads: 1
+#   resources:
+#     walltime = "1:00:00",
+#     mem = "15G",
+#   run:
+#     dfs = []
 
-    for f in input.files:
-      b = pd.read_csv(f, skiprows=4)
-      mag_name = os.path.basename(f).replace("_mef.csv.csv")
-      b["bin"] = mag_name
-      dfs.append(b)
+#     for f in input.files:
+#       b = pd.read_csv(f, skiprows=4)
+#       mag_name = os.path.basename(f).replace("_mef.csv.csv")
+#       b["bin"] = mag_name
+#       dfs.append(b)
 
-    df = pd.concat(dfs)
-    df.to_csv(output.o, index = False)
+#     df = pd.concat(dfs)
+#     df.to_csv(output.o, index = False)
 
 
 
