@@ -1,0 +1,6 @@
+outdir: output
+
+samples:
+  <sample>:
+    assembly: /path/to/assembly.fasta
+    contig_bin: /path/to/contig_bin.tsv
