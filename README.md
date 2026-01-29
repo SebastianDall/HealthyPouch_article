@@ -1,4 +1,16 @@
 # HealthyPouch_article	
+## Abstract
+### Background
+Fecal microbiota transplantation (FMT) from healthy donors with a normally functioning colon has limited clinical effect in the treatment of chronic pouchitis. However, a normally functioning ileal pouch-anal anastomosis (IPAA) physiology differs from individuals with a healthy intact colon. We aimed to investigate the microbial characteristics of patients with a normally functioning IPAA (HealthyPouch) compared with chronic pouchitis (SickPouch), Ulcerative Colitis (UC), and a healthy intact colon microbiome (NormalGut). Furthermore, we aimed to investigate how repeated antibiotic use in patients with chronic pouchitis influences antimicrobial resistance on a bacterial genome level.
+
+### Methods
+Fecal samples from 191 participants were collected; HealthyPouch (n=38), SickPouch (n=38), UC (n=23), and NormalGut (n=92) and sequenced with Illumina and taxonomically profiled. Samples from HealthyPouch, SickPouch, and NormalGut were also long-read sequenced using Oxford Nanopore Technologies for reconstruction of 12,295 metagenome-assembled genomes (MAGs). 
+
+### Findings
+The HealthyPouch microbiome is distinct from both the UC and NormalGut microbiome as well as the SickPouch microbiome. E. coli MAGs in the SickPouch (n=22) microbiome had significantly higher co-occuring ciprofloxacin resistance mutations in the gyrA and parC genes, compared to both HealthyPouch (n=26; p<0.05) and NormalGut (n=40; p<0.05). Lastly, three plasmids were associated with E. coli carrying extended-spectrum beta lactamase genes using DNA methylation pattern.
+
+### Interpretation
+HealthyPouch microbiota differs from NormalGut microbiota, and could therefore be more appropriate for FMT treatment of chronic pouchitis. The association between E. coli and resistance gene-carrying plasmids underscores the importance of integrating plasmid analysis into metagenome-based approaches for personalized antibiotic treatment and resistance monitoring. 
 
 ## Microbiome Analysis
 This repository contains the code used for generating the microbiome analysis. 
