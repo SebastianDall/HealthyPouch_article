@@ -1,4 +1,6 @@
 localDB
+bakta
+gtdb_novel
 .snakemake
 data/*
 !data/.gitkeep
@@ -14,8 +16,6 @@ output/*
 !output/.gitkeep
 plots/*
 !plots/.gitkeep
-_pipelines/*
-!_pipelines/.gitkeep
 analysis/*
 !analysis/.gitkeep
 !analysis/alpha_diversity.R
