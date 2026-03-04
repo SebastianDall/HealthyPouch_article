@@ -55,3 +55,4 @@ The files `data/hp_included_participants.csv`, `data/PaPr_metadata.tsv`, `data/P
 
 ## Cite 
 Please cite our preprint: 
+Dall, S. M., Møllekær, A. H., Kousgaard, S. J., Jakobsen, S. S., Larsen, L., Sørensen, B., ... & Albertsen, M. Distinct Microbial and Resistome Signatures Differentiate Healthy and Inflamed Ileal Pouches in Patients with Ulcerative Colitis. *Available at SSRN 6148080.*
