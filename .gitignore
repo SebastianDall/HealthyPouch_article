@@ -2,6 +2,7 @@ localDB
 bakta
 gtdb_novel
 .snakemake
+config.yaml
 data/*
 !data/.gitkeep
 !data/participant_metadata.csv

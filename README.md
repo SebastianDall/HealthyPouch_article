@@ -32,6 +32,7 @@ This repository contains the code used for generating the microbiome analysis.
  - [`rda.R`](analysis/rda.R): script used to generate plot D in Figure 1.
 
 `pipelines` contains workflows to: 
+ - [Illumina/MetaPhlAn4 pipeline](pipelines/metaphlan4/README.md)
  - [MiMAG gene idenfication pipeline](pipelines/mimag_pipeline/README.md) 
  - [Assembly stats](pipelines/stats/README.md) 
  - [Annotate plasmids](pipelines/annotate_plasmid/README.md) 

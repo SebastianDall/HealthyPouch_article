@@ -1,0 +1,67 @@
+import os
+import pandas as pd
+
+SNAKEDIR = os.path.dirname(workflow.snakefile)
+
+metadata = pd.read_table(os.path.join(SNAKEDIR, "2024-09-24_metaphlan4_input_samples.txt"), sep = "\t")
+
+SAMPLES = metadata["sample_seq_id"].unique().tolist()
+BARCODES = metadata["sample_barcode"].unique().tolist()
+CUTOFF = 1000
+SEQTK_SEED = 100
+METAPHLAN_DB = "databases/metaphlan_4.1.0" 
+METAPHLAN_INDEX = "mpa_vJun23_CHOCOPhlAnSGB_202307"
+
+TMP_DIR = "tmp"
+OUT_DIR = "data/metaphlan4/"
+
+include: "rules/FunctionsModule.smk"
+
+if os.path.exists(OUT_DIR+"fastqs_NonHuman_ReadCount.txt"):
+    SUBSAMPLED_BARCODES = getSubSamples(OUT_DIR+"fastqs_NonHuman_ReadCount.txt",CUTOFF)
+else:
+    SUBSAMPLED_BARCODES = BARCODES
+
+include: "rules/fastp.smk"
+include: "rules/BowtieRemoveHuman.smk"
+include: "rules/ConcatenateSamples.smk"
+include: "rules/Subsampling.smk"
+include: "rules/metaphlan.smk"
+# include: "rules/metaphlan_full_samples.smk"
+
+
+def RuleAll(metadata):
+    rule_all_input = []
+
+    
+    for barcode in BARCODES:
+        
+        for sample in SAMPLES:
+            rule_all_input.append(OUT_DIR+barcode+"/fastp/"+sample+"_R1_fastp.fastq")
+            rule_all_input.append(OUT_DIR+barcode+"/fastp/"+sample+"_R2_fastp.fastq")
+            rule_all_input.append(OUT_DIR+barcode+"/"+sample+"_R1_NonHuman.fastq.gz")
+            rule_all_input.append(OUT_DIR+barcode+"/"+sample+"_R2_NonHuman.fastq.gz")
+            rule_all_input.append(OUT_DIR+barcode+"/"+sample+"_NonHuman_ReadCount.txt")
+        
+        
+    if os.path.exists(OUT_DIR+"fastqs_NonHuman_ReadCount.txt"):
+        barcodes = getSubSamples(OUT_DIR+"fastqs_NonHuman_ReadCount.txt",CUTOFF)
+        for barcode in barcodes:
+            # rule_all_input.append(OUT_DIR+barcode+"/"+barcode+"_R1_NonHuman_Combined.fastq.gz")
+            # rule_all_input.append(OUT_DIR+barcode+"/"+barcode+"_R2_NonHuman_Combined.fastq.gz")
+            rule_all_input.append(OUT_DIR+barcode+"/"+barcode+"_R1_NonHuman_Combined_Subsampled_"+str(CUTOFF)+".fastq.gz")
+            rule_all_input.append(OUT_DIR+barcode+"/"+barcode+"_R2_NonHuman_Combined_Subsampled_"+str(CUTOFF)+".fastq.gz")
+            rule_all_input.append(OUT_DIR+barcode+"/"+barcode+"_NonHuman_Combined_Subsampled_"+str(CUTOFF)+"_profile.txt")
+
+
+    rule_all_input.append(OUT_DIR+"fastqs_NonHuman_ReadCount.txt")
+    rule_all_input.append(OUT_DIR+"MetaPhlAn_4.1.0_Combined_NonHuman_Subsampled_"+str(CUTOFF)+"_profile.txt")
+    # rule_all_input.append(OUT_DIR+"MetaPhlAn_4.1.0_Combined_NonHuman_Subsampled_"+ "full" +"_profile.txt")
+    
+    return rule_all_input
+
+
+
+rule all:
+    input:
+        RuleAll(metadata)
