@@ -28,6 +28,8 @@ html/*
 !html/.gitkeep
 scripts*
 !scripts/.gitkeep
+_pipelines/*
+!_pipelines/.gitkeep
 redo_samples.txt*
 
 
