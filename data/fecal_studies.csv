@@ -1,0 +1,39 @@
+﻿study;Year;Author;year_author;include;include_;ONT_vs_PB;longitudinal;samples;total_Gbp;Gbp_per_sample;technology;platform;chemistry;lib_prep;mean_RL_kb;N50_kb;mock;sample_type;link
+1;2024;Minich;2024 Minich;1;1;1;1;47;1171.7;24.9;ONT;PromethION;R10.4.1;SQK-LSK114;;;0;fecal (human);
+1;2024;Minich;2024 Minich;1;1;1;1;47;591.4;12.6;PB;Revio;;Smartbell 3.0;;;0;fecal (human);
+2;2019;Arumugam;2019 Arumugam;1;1;0;0;1;6;6;ONT;MinION Mk1B ;R9.4;SQK-LSK108 ;9;;0;bioreactor;https://link.springer.com/article/10.1186/s40168-019-0665-y#Sec5
+3;2020;Kolmogorov;2020 Kolmogorov;1;1;0;0;1;49.2;49.2;PB;Sequel;CCS;Smartbell 1.0;;14;0;fecal (sheep) and mock;https://www.nature.com/articles/s41592-020-00971-x
+4;2019;Bickhart;2019 Bickhart;1;1;0;0;1;52.2;52.2;PB;Sequel and RSII;;;7.8;9;0;rumen (cow);https://link.springer.com/article/10.1186/s13059-019-1760-x
+5;2019;Nicholls;2019 Nicholls;1;1;0;0;2;333;166.5;ONT;GridION & PromethION;R9.4.1;SQK-LSK109;;5.4;1;mock (Zymo);https://academic.oup.com/gigascience/article/8/5/giz043/5486468
+6;2020;Hon;2020 Hon;1;1;0;0;1;59.1;59.1;PB;Sequel II;;Smartbell 2.0;10.5;12;1;mock (ATCC MSA-1003);https://www.nature.com/articles/s41597-020-00743-4
+7;2022;Bickhart;2022 Bickhart;1;1;0;0;1;206.4;206.4;PB;Sequel II;;Smartbell 2.0;;11.8;0;fecal (sheep);https://www.nature.com/articles/s41587-021-01130-z
+8;2024;Benoit;2024 Benoit;1;1;0;0;3;14;4.7;PB;Sequel II;;Smartbell 2.0;;;0;anaerobic digester;https://www.nature.com/articles/s41587-023-01983-6#Sec9
+9;2022;Sereika;2022 Sereika;1;1;1;0;2;106.9;53.5;ONT;MinION Mk1B & PromethION;R10.4.1 & R9.4.1;;;;0;anaerobic digester and mock (Zymo D6322);https://www.nature.com/articles/s41592-022-01539-7
+9;2022;Sereika;2022 Sereika;1;1;1;0;1;15.3;15.3;PB;Sequel II;;Smartbell 1.0;;15.4;0;anaerobic digester ;https://www.nature.com/articles/s41592-022-01539-7
+10;2021;Priest;2021 Priest;1;1;0;0;3;15;5;PB;Sequel II;;?;9;;0;seawater;https://peerj.com/articles/11721/?ref=https%3A%2F%2Fgithubhelp.com#supp-2
+11;2022;Gehrig;2022 Gehrig;1;1;0;0;12;72;6;PB;Sequel II;;Smartbell 2.0;;;0;fecal (human);https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000794
+12;2024;Portik;2024 Portik;1;1;0;0;1;255;255;PB;Revio & Sequel IIe;;Smartbell 3.0 and 2.0;;;1;mock (Zymo fecal D6323);https://www.biorxiv.org/content/10.1101/2024.05.10.593587v1
+13;2023;Eisenhofer;2023 Eisenhofer;1;1;0;0;2;39.6;19.8;PB;Sequel IIe;;Smartbell 2.0;;;0;fecal (mouse);https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10986573/
+14;2022;Kim;2022 Kim;1;1;0;0;5;29.6;5.9;PB;Sequel II;;missing;;;0;fecal (human);https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9606305/
+15;2023;Orellana;2023 Orellana;1;1;0;1;4;48.9;12.2;PB;Sequel II;;missing;6.1;7.5;0;seawater;https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-023-01557-3
+16;2023;Tao ;2023 Tao ;1;1;0;0;1;9.17;9.2;PB;Sequel IIe;;Smartbell 3.0;4.5;;0;sediment;https://pubmed.ncbi.nlm.nih.gov/36475839/
+17;2023;Zhang;2023 Zhang;1;1;1;0;2;14.7;7.4;PB;RS II?;;;missing;missing;0;fecal (human);https://academic.oup.com/bib/article/24/2/bbad087/7077274?login=true
+17;2023;Zhang;2023 Zhang;1;1;1;0;2;17.5;8.8;ONT;MinION;missing;;missing;missing;0;fecal (human);
+18;2022;Kato;2022 Kato;1;1;0;0;1;27.9;27.9;PB;Sequel II;;Smartbell 2.0;;10.5;0;sediment;https://www.frontiersin.org/journals/microbiology/articles/10.3389/fmicb.2022.1045931/full
+19;2022;Zhang;2022 Zhang;1;1;0;0;5;332;66.4;PB;Sequel II;;?;;17.3;0;GI (chicken);https://pubmed.ncbi.nlm.nih.gov/36399059/
+20;2023;Jiang;2023 Jiang;1;1;0;0;1;64.6;64.6;PB;Sequel II;;Smartbell 2.0;;14.3;0;anaerobic digester;https://pubmed.ncbi.nlm.nih.gov/36699587/
+21;2023;Saak;2023 Saak;1;1;0;1;15;99.66;6.6;PB;Sequel II;;Express template prep kit 2.0;;;0;cheese;https://pubmed.ncbi.nlm.nih.gov/36622155/
+22;2024;Masuda;2024 Masuda;1;1;0;0;2;1.8;0.9;PB;Sequel II;;Smartbell 1.0;17;;0;phyllosphere (rice);https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10973392/
+23;2022;Tamburini;2022 Tamburini;1;1;0;0;3;59.13;19.7;ONT;MinION;R9.4;SQK-LSK109;;8.3;0;fecal (human);https://www.nature.com/articles/s41467-021-27917-x
+24;2022;Cheng;2022 Cheng;1;1;0;0;21;35.6;1.7;ONT;GridION;R9.4.1;SQK-LSK109;1.6;;0;sputum (bronchoalveolar lavage fluid) and mock;https://pubmed.ncbi.nlm.nih.gov/36259361/
+25;2022;Wang;2022 Wang;1;1;0;0;2;1.2;0.6;ONT;PromethION;R9.4.1;SQK-LSK109;2.5;3.6;0;sputum;https://bmcbiol.biomedcentral.com/articles/10.1186/s12915-022-01418-9
+26;2021;Haro-Moreno;2021 Haro-Moreno;1;1;0;0;1;7.6;7.6;PB;Sequel II;CCS;missing;missing;missing;0;seawater;https://www.frontiersin.org/journals/microbiology/articles/10.3389/fmicb.2021.708782/full
+27;2019;Bertrand;2019 Bertrand;1;1;0;0;28;88;3.1;ONT;MinION & GridION;R9;SQK-LSK208;missing;2.7;0;fecal (human);https://www.nature.com/articles/s41587-019-0191-2
+28;2020;Moss;2020 Moss;1;1;1;0;14;236.6;16.9;ONT;MinION;R9.4;;;5.9;0;fecal (human) & mock (ATCC 12 species);https://www.nature.com/articles/s41587-020-0422-6
+28;2020;Moss;2020 Moss;1;0;1;0;1;30.3;30.3;ONT;MinION;R9.4;;;5.9;1;mock (ATCC 12 species);https://www.nature.com/articles/s41587-020-0422-6
+28;2020;Moss;2020 Moss;1;0;1;0;13;206.3;15.9;ONT;MinION;R9.4;;;2.8;0;fecal (human);https://www.nature.com/articles/s41587-020-0422-6
+28;2020;Moss;2020 Moss;1;1;1;0;2;44.8;22.4;PB;Sequel;;missing;;4.1;0;fecal (human);
+29;2022;Wilbanks;2022 Wilbanks;1;1;0;0;2;0.474;0.2;PB;RS II;;;;;0;marine aggregates;https://www.nature.com/articles/s41396-022-01242-7
+30;2024;Curry;2024 Curry;1;1;0;0;4;25.1;6.3;ONT;MinION;R9.4.1;SQK-LSK109;;;0;microbial mats;https://www.biorxiv.org/content/10.1101/2024.01.25.577285v1.full.pdf
+31;2022;Chen;2022 Chen;1;1;0;1;200;1215;6.1;ONT;PromethION;R9.4.1;SQK-LSK109;;;1;fecal (human);
+32;2025;Dall;2025 Dall;;;;;238;3766;18.4;ONT;PromethION;R10.4.1;SQK-NDB114.24;;;;fecal (human);
