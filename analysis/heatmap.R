@@ -27,22 +27,37 @@ filter_tax_species <- function(dataset) {
 # Load data
 metadata <- read_delim("data/participant_metadata.csv") %>%  
   select(sample_barcode, id, health_status) 
-metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
-  rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
+
+metaphlan <- read_delim("./data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
+    rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_full")) %>%  
+    mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
     separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
     filter(!is.na(Species)) %>%
     filter(is.na(Strain)) 
-  # filter_tax_species() %>% 
-  # rename_at(vars(-1), ~ sub("_.*$", "", .))
+# metaphlan <- read_delim("data/MetaPhlAn_4.1.0_Combined_NonHuman_Subsampled_full_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
+#     rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_full")) %>%  
+#     mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
+#     separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
+#     filter(!is.na(Species)) %>%
+#     filter(is.na(Strain)) 
+#
+#
+# readcount <- read_delim("./data/read_count.txt", col_names = c("sample_barcode", "library_id", "num_reads"))
+# readcount_sum <- readcount %>%
+#     select(sample_barcode, num_reads) %>%
+#     group_by(sample_barcode) %>%
+#     summarise(num_reads = sum(num_reads))
+#
+# sample_barcode_filtered <- readcount_sum %>%
+#     filter(num_reads >= 2500000) %>% pull(sample_barcode)
+#
+# metaphlan <- metaphlan %>% select(Kingdom:Strain, sample_barcode_filtered)
+
 
 ## Prepare amp object
 metaphlan_df <- metaphlan %>%  
-  # filter(clade_name == "UNCLASSIFIED" | str_detect(clade_name, "s_{2}")) %>%  
   mutate(OTU = paste0("OTU", row_number())) %>%  
   relocate(OTU)
-  # mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED|t__UNCLASSIFIED", clade_name)) %>%
-  # separate(clade_name, sep = "\\|", into = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus",
-  #                                            "Species", "Strain"))
 
 otutable <- metaphlan_df %>% 
   select(-Kingdom:-Strain)
@@ -64,7 +79,7 @@ ra_df <- amp_heatmap(amp_object,
                                plot_values = FALSE,
                                normalise = FALSE, 
                                textmap = TRUE,
-                               tax_show = 45) 
+                               tax_show = 15) 
 
 
 ## Aggregate and cluster dataframe
