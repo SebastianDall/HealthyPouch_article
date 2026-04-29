@@ -148,7 +148,8 @@ mimag <- fread("./data/mimag_bin_quality.tsv")
 # New MIMAG stats
 mimag_stats_distinct <- mimag %>% 
   distinct(bin, .keep_all = TRUE) %>% 
-  filter(bin != "NP-PaPr00000011MP.bin.1.2")
+  filter(bin != "NP-PaPr00000011MP.bin.1.2") %>%
+  filter(sample != "NP-FMTP00000004MP")
 
 
 mimag_stats_distinct  %>% 
@@ -256,7 +257,9 @@ mimag_stats_distinct  %>%
 #   write_delim("data/study_ref.csv")
 
 gtdb_mimag_stats_distinct <- fread("./data/genome_stats.tsv") %>% 
+    filter(sample != "NP-FMTP00000004MP") %>%
     filter(bin != "NP-PaPr00000088MP.bin.1.4")
+
 
 novelty <- gtdb_mimag_stats_distinct %>% 
   select(bin, classification:species, mimag) %>% 
