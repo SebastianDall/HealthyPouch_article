@@ -2,34 +2,13 @@ library(tidyverse)
 library(ampvis2)
 library(Maaslin2)
 
-# Function
-filter_tax_species <- function(dataset) {
-  taxonomic_levels <- strsplit(dataset$clade_name, "\\|")
-  max_level <- max(sapply(taxonomic_levels, length))
-  
-  keep_rows <- logical(nrow(dataset))
-  keep_rows[1] <- TRUE
-  
-  for (i in 2:nrow(dataset)) {
-    levels <- taxonomic_levels[[i]]
-    has_strain <- any(grepl("^t__", levels))
-    
-    if (has_strain) {
-      keep_rows[i] <- TRUE
-    }
-  }
-  
-  filtered_dataset <- dataset[keep_rows, ]
-  return(filtered_dataset)
-}
-
 
 # Load data
 metadata <- read_delim("data/participant_metadata.csv") %>%  
   select(sample_barcode, id, health_status) 
 
-metaphlan <- read_delim("./data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
-    rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_full")) %>%  
+metaphlan <- read_delim("./data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", show_col_types = FALSE) %>%  
+    rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
     mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
     separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
     filter(!is.na(Species)) %>%
@@ -166,7 +145,8 @@ meta_for_maaslin <- amp_object$metadata %>%
 fit <- Maaslin2(
                 input_data = otu_for_maaslin / 100,
                 input_metadata = meta_for_maaslin,
-                output = "results/maaslin2",
+                #output = "results/maaslin2",
+                output = "output/maaslin2",
                 fixed_effects = "health_status",
                 reference = c("health_status,healthy_pouch"),
                 normalization = "CLR",        # already relative abundance, but MaAsLin2 renormalizes
@@ -270,9 +250,9 @@ da_plot <- ggplot(plot_data, aes(x = comparison, y = Species)) +
 
 da_plot
 
-ggsave("figures/differential_abundance_top15.png", da_plot,
-       device = "png", dpi = "retina", bg = "white",
-       width = 7, height = 5)
+# ggsave("figures/differential_abundance_top15.png", da_plot,
+#        device = "png", dpi = "retina", bg = "white",
+#        width = 7, height = 5)
 
 
 # ── MaAsLin2: HealthyPouch vs SickPouch ───────────────────────────
@@ -284,7 +264,8 @@ meta_for_maaslin_pouch <- amp_object$metadata %>%
 fit_pouch <- Maaslin2(
   input_data = otu_for_maaslin / 100,
   input_metadata = meta_for_maaslin_pouch,
-  output = "results/maaslin2_pouch_ref",
+  #output = "results/maaslin2_pouch_ref",
+  output = "output/maaslin2_pouch_ref",
   fixed_effects = "health_status",
   reference = c("health_status,healthy_pouch"),
   normalization = "CLR",
@@ -363,9 +344,9 @@ da_plot_pouch <- ggplot(plot_data_pouch, aes(x = "SickPouch vs HealthyPouch", y 
 
 da_plot_pouch
 
-ggsave("figures/differential_abundance_sick_vs_healthy_pouch.png", da_plot_pouch,
-       device = "png", dpi = "retina", bg = "white",
-       width = 6, height = 5)
+# ggsave("figures/differential_abundance_sick_vs_healthy_pouch.png", da_plot_pouch,
+#        device = "png", dpi = "retina", bg = "white",
+#        width = 6, height = 5)
 
 
 # ── Heatmap with MaAsLin2 significance markers ───────────────────
@@ -427,9 +408,10 @@ heatmap_sig <- ggplot(heatmap_sig_data, aes(x = health_status, y = species, fill
     text = element_text(family = "Times New Roman")) +
   guides(fill = guide_legend(reverse = TRUE)) +
   labs(title = "C) Relative Abundance",
-       caption = "Significance vs HealthyPouch (MaAsLin2 CLR): * q<0.05, ** q<0.01, *** q<0.001")
+       caption = bquote("Significance vs HealthyPouch (MaAsLin2 CLR): * " *p[adj]<0.05 ~", ** " *p[adj]<0.01 ~", *** " *p[adj]<0.001))
+       #caption = expression("Significance vs HealthyPouch (MaAsLin2 CLR): * q<0.05, ** q<0.01, *** q<0.001"))
 heatmap_sig
 
-ggsave("figures/heatmap_with_significance.png", heatmap_sig,
-       device = "png", dpi = "retina", bg = "white",
-       width = 7, height = 5)
+# ggsave("figures/heatmap_with_significance.png", heatmap_sig,
+#        device = "png", dpi = "retina", bg = "white",
+#        width = 7, height = 5)
