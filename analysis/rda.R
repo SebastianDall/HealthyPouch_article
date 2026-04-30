@@ -2,51 +2,29 @@ library(tidyverse)
 library(ampvis2)
 library(vegan)
 
-
-# Function
-filter_tax_species <- function(dataset) {
-  taxonomic_levels <- strsplit(dataset$clade_name, "\\|")
-  max_level <- max(sapply(taxonomic_levels, length))
-  
-  keep_rows <- logical(nrow(dataset))
-  keep_rows[1] <- TRUE
-  
-  for (i in 2:nrow(dataset)) {
-    levels <- taxonomic_levels[[i]]
-    has_strain <- any(grepl("^t__", levels))
-    
-    if (has_strain) {
-      keep_rows[i] <- TRUE
-    }
-  }
-  
-  filtered_dataset <- dataset[keep_rows, ]
-  return(filtered_dataset)
-}
-
 # Load data
 metadata <- read_delim("data/participant_metadata.csv") %>%  
-  select(sample_barcode, id, health_status) 
+  select(sample_barcode, id, health_status) %>%
+  filter(sample_barcode != "FMTP00000004MP")
+
 metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
-  rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
-  filter_tax_species() %>% 
-  rename_at(vars(-1), ~ sub("_.*$", "", .))
+    rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
+    mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
+    separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
+    filter(!is.na(Species)) %>%
+    filter(is.na(Strain)) 
 
 
 ## Prepare amp object
 metaphlan_df <- metaphlan %>%  
-  filter(clade_name == "UNCLASSIFIED" | str_detect(clade_name, "s_{2}")) %>%  
+  filter(Species != "s__UNCLASSIFIED") %>%  
   mutate(OTU = paste0("OTU", row_number())) %>%  
-  relocate(OTU) %>%  
-  mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED|t__UNCLASSIFIED", clade_name)) %>%
-  separate(clade_name, sep = "\\|", into = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus",
-                                             "Species", "Strain"))
+  relocate(OTU)
 
 otutable <- metaphlan_df %>% 
   select(-Kingdom:-Strain)
 
 taxtable <- metaphlan_df %>% 
-  slice(-1) %>% 
   relocate(OTU, .before="Kingdom") %>% 
   mutate(Species = Species %>%
            sub("^s__", "", .) %>%   
@@ -68,7 +46,7 @@ pca <- amp_object %>%
     sample_point_size = 2) + 
   scale_color_manual(name = NULL, 
                      labels = c("SickPouch", "HealthyPouch", "UC", "NormalGut"),
-                     values = c(  "#803E75", "#A6BDD7", "#CEA262",  "#817066"),
+                     values = c("#803E75", "#A6BDD7", "#CEA262",  "#817066"),
                      breaks = c("sick_pouch_incl", "healthy_pouch", "UC", "normal_gut")) + 
   theme(panel.background = element_rect(fill="grey97"),
         panel.grid.major = element_line(color = "grey85"), 
@@ -105,7 +83,7 @@ rda <- amp_object %>%
     sample_point_size = 2) + 
   scale_color_manual(name = NULL, 
                      labels = c("SickPouch", "HealthyPouch", "UC", "NormalGut"),
-                     values = c(  "#803E75", "#A6BDD7", "#CEA262",  "#817066"),
+                     values = c(  "#803E75","#4f6985", "#CEA262",  "#817066"),
                      breaks = c("sick_pouch_incl", "healthy_pouch", "UC", "normal_gut")) + 
   theme(panel.background = element_rect(fill="grey97"),
         panel.grid.major = element_line(color = "grey85"), 
@@ -133,6 +111,8 @@ rda <- amp_object %>%
 ggpubr::ggarrange(pca, rda, nrows = 1)
 
 ggsave(filename = "./figures/pca-rda_short_read.png", device = "png", dpi = "retina", bg = "white")
+
+ggsave( plot = rda, filename ="./figures/rda.png", device = "png", dpi = "retina", bg = "transparent")
 
 for (i in seq_along(rda$layers)) {
   g <- class(rda$layers[[i]]$geom)[1]
