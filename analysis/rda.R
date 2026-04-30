@@ -21,17 +21,14 @@ metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profil
 
 ## Prepare amp object
 metaphlan_df <- metaphlan %>%  
-  #filter(clade_name == "UNCLASSIFIED" | str_detect(clade_name, "s_{2}")) %>%  
+  filter(Species != "s__UNCLASSIFIED") %>%  
   mutate(OTU = paste0("OTU", row_number())) %>%  
-  relocate(OTU)  
-  # mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED|t__UNCLASSIFIED", clade_name)) %>%
-  # separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") 
+  relocate(OTU)
 
 otutable <- metaphlan_df %>% 
   select(-Kingdom:-Strain)
 
 taxtable <- metaphlan_df %>% 
-  slice(-1) %>% 
   relocate(OTU, .before="Kingdom") %>% 
   mutate(Species = Species %>%
            sub("^s__", "", .) %>%   
@@ -130,6 +127,8 @@ rda
 #ggpubr::ggarrange(pca, rda, nrows = 1)
 
 #ggsave(filename = "./figures/pca-rda_short_read.png", device = "png", dpi = "retina", bg = "white")
+
+ggsave( plot = rda, filename ="./figures/rda.png", device = "png", dpi = "retina", bg = "transparent")
 
 for (i in seq_along(rda$layers)) {
   g <- class(rda$layers[[i]]$geom)[1]

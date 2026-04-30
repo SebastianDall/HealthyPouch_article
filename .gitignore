@@ -1,9 +1,11 @@
 localDB
+.direnv
 bakta
 gtdb_novel
 .snakemake
 config.yaml
 data/*
+results/*
 !data/.gitkeep
 !data/participant_metadata.csv
 !data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt
