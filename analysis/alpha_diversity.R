@@ -4,19 +4,17 @@ library(vegan)
 library(ggpubr)
 
 
-
 # Load data
 metadata <- read_delim("data/participant_metadata.csv") %>%  
-  select(sample_barcode, health_status) 
-
-# readcount <- read_delim("./data/read_count.txt", col_names = c("sample_barcode", "library_id", "num_reads"))
-metaphlan <- read_delim("./data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", show_col_types = FALSE) %>%
-    rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%
+    select(sample_barcode, health_status)
+readcount <- read_delim("./data/read_count.txt", col_names = c("sample_barcode", "library_id", "num_reads"))
+metaphlan <- read_delim("./data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
+    rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
     mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
     separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
     filter(!is.na(Species)) %>%
-    filter(is.na(Strain))
-# metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
+    filter(is.na(Strain)) 
+# metaphlan <- read_delim("data/MetaPhlAn_4.1.0_Combined_NonHuman_Subsampled_full_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
 #     rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_full")) %>%  
 #     mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
 #     separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
@@ -288,3 +286,7 @@ shannon_div_plot <- ggplot(shannon_div_df, aes(x = health_status, y = Shannon)) 
   labs(title = "B) Shannon Diversity")
 
 shannon_div_plot
+
+
+###################################### 
+
