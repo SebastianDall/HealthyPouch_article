@@ -7,45 +7,37 @@ library(ggpubr)
 # Load data
 metadata <- read_delim("data/participant_metadata.csv") %>%  
     select(sample_barcode, health_status)
-readcount <- read_delim("./data/read_count.txt", col_names = c("sample_barcode", "library_id", "num_reads"))
+#readcount <- read_delim("./data/read_count.txt", col_names = c("sample_barcode", "library_id", "num_reads"))
 metaphlan <- read_delim("./data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
     rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
     mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
     separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
     filter(!is.na(Species)) %>%
     filter(is.na(Strain)) 
-# metaphlan <- read_delim("data/MetaPhlAn_4.1.0_Combined_NonHuman_Subsampled_full_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
-#     rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_full")) %>%  
-#     mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
-#     separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
-#     filter(!is.na(Species)) %>%
-#     filter(is.na(Strain)) 
-# filter_tax_species() %>% 
-# rename_at(vars(-1), ~ sub("_.*$", "", .))
-# 
-# 
+
+
 # readcount_sum <- readcount %>%
 #     select(sample_barcode, num_reads) %>%
 #     group_by(sample_barcode) %>%
 #     summarise(num_reads = sum(num_reads))
-# 
+
+
 # sample_barcode_filtered <- readcount_sum %>%
 #     filter(num_reads >= 2500000) %>% pull(sample_barcode)
-# 
-#  
+
 # ## Dataframe
 # readcount_plot_df <- readcount_sum %>%
 #     filter(sample_barcode %in% sample_barcode_filtered) %>%
 #     right_join(metadata, by = "sample_barcode") %>%
 #     mutate(health_status = factor(health_status, levels = c("sick_pouch_incl", "healthy_pouch", "UC", "normal_gut")))
-# 
+
 # ## Dataframe
 # readcount_plot_removed_df <- readcount_sum %>%
 #     filter(!sample_barcode %in% sample_barcode_filtered) %>%
 #     right_join(metadata, by = "sample_barcode") %>%
 #     mutate(health_status = factor(health_status, levels = c("sick_pouch_incl", "healthy_pouch", "UC", "normal_gut")))
-# 
-# 
+
+
 ## Statistics
 comparisons <- tribble(
   ~group_code, ~g1,               ~g2,
@@ -68,7 +60,7 @@ comparisons <- tribble(
 #            ) %>%
 #     mutate(sig_dif = if_else(sig_test_p_value <= 0.05, "yes", "no"))
 # }
-# 
+
 # readcount_stats <- comparisons %>%
 #     mutate(res = map2(g1, g2, ~ wilcox_pair_reads(readcount_plot_df, .x, .y))) %>%
 #     select(group_code, res) %>%
@@ -84,7 +76,7 @@ comparisons <- tribble(
 #                                      TRUE               ~ NA_character_
 #            )
 #     )
-# 
+
 # ## Plot
 # readcount_plot <- ggplot(readcount_plot_df, aes(x = health_status, y = num_reads)) +
 #     geom_point(aes(color = health_status), position = position_jitter(width = 0.09), alpha = 0.7, size = 2) +
@@ -115,9 +107,6 @@ comparisons <- tribble(
 
 
 # Richness plot
-# metaphlan <- metaphlan %>% select(Kingdom:Strain, sample_barcode_filtered)
-# view(metaphlan)
-
 ## Dataframe
 richness_df <- metaphlan %>%  
     filter(Species != "s__UNCLASSIFIED") %>%
@@ -159,6 +148,31 @@ richness_stats <- comparisons %>%
     )
   )
 
+add_sig_bracket_richness <- function(xmin, xmax, y.position) {
+  
+  p_label <- richness_stats %>%
+    filter(
+      (g1 == xmin & g2 == xmax) |
+        (g1 == xmax & g2 == xmin)
+    ) %>%
+    pull(p_val_adj_sim) %>%
+    str_replace("p", "p[adj] ")
+  
+  if (length(p_label) == 0 || p_label == "p[adj] >0.05") {
+    return(NULL)
+  }
+  
+  geom_bracket(
+    xmin = xmin,
+    xmax = xmax,
+    y.position = y.position,
+    label = p_label,
+    label.size = 8/.pt,
+    family = "Times New Roman",
+    type = "expression"
+  )
+}
+
 
 ## Plot
 richness_plot <- ggplot(richness_df, aes(x = health_status, y = richness)) +
@@ -183,22 +197,17 @@ richness_plot <- ggplot(richness_df, aes(x = health_status, y = richness)) +
         plot.title = element_text(face = "bold", size = 10), 
         aspect.ratio = 1) + 
   ylim(0,360)+
-  labs(x = "", y = "Richness") + 
-  geom_bracket(xmin = "sick_pouch_incl", xmax = "healthy_pouch", y.position = 175,
-               label = "p[adj] < 0.01", label.size = 8/.pt, family = "Times New Roman", type = "expression") +
-  geom_bracket(xmin = "healthy_pouch", xmax = "UC", y.position = 275,
-               label = "p[adj] < 0.0001", label.size = 8/.pt, family = "Times New Roman", type = "expression") + 
-  # geom_bracket(xmin = "UC", xmax = "normal_gut", y.position = 310,
-  #              label = "p < 0.05", label.size = 8/.pt, family = "Times New Roman") + 
-  geom_bracket(xmin = "sick_pouch_incl", xmax = "UC", y.position = 240,
-               label = "p[adj] < 0.0001", label.size = 8/.pt, family = "Times New Roman", type = "expression") + 
-  geom_bracket(xmin = "healthy_pouch", xmax = "normal_gut", y.position = 310,
-               label = "p[adj] < 0.0001", label.size = 8/.pt, family = "Times New Roman", type = "expression") + 
-  geom_bracket(xmin = "sick_pouch_incl", xmax = "normal_gut", y.position = 343,
-               label = "p[adj] < 0.0001", label.size = 8/.pt, family = "Times New Roman", type = "expression") +
+  labs(x = "", y = "Richness") +
+  add_sig_bracket_richness("sick_pouch_incl", "healthy_pouch", 175) +
+  add_sig_bracket_richness("healthy_pouch", "UC", 275) +
+  add_sig_bracket_richness("sick_pouch_incl", "UC", 240) +
+  add_sig_bracket_richness("healthy_pouch", "normal_gut", 310) +
+  add_sig_bracket_richness("sick_pouch_incl", "normal_gut", 343) +
+  add_sig_bracket_richness("UC", "normal_gut", 343) + 
   labs(title = "A) Richness")
 
 richness_plot
+
 
 # Shannon diversity
 
@@ -249,6 +258,32 @@ shannon_div_stats <- comparisons %>%
   )
 
 
+add_sig_bracket_shannon <- function(xmin, xmax, y.position) {
+  
+  p_label <- shannon_div_stats %>%
+    filter(
+      (g1 == xmin & g2 == xmax) |
+        (g1 == xmax & g2 == xmin)
+    ) %>%
+    pull(p_val_adj_sim) %>%
+    str_replace("p", "p[adj] ")
+  
+  if (length(p_label) == 0 || p_label == "p[adj] >0.05") {
+    return(NULL)
+  }
+  
+  geom_bracket(
+    xmin = xmin,
+    xmax = xmax,
+    y.position = y.position,
+    label = p_label,
+    label.size = 8/.pt,
+    family = "Times New Roman",
+    type = "expression"
+  )
+}
+
+
 ## Plot
 shannon_div_plot <- ggplot(shannon_div_df, aes(x = health_status, y = Shannon)) +
   geom_point(aes(color = health_status), position = position_jitter(width = 0.09), alpha = 0.7, size = 2) + scale_x_discrete(labels = c("SickPouch", "HealthyPouch", "UC", "NormalGut")) + 
@@ -271,22 +306,15 @@ shannon_div_plot <- ggplot(shannon_div_df, aes(x = health_status, y = Shannon)) 
         text = element_text(family = "Times New Roman"), 
         plot.title = element_text(face = "bold", size = 10), 
         aspect.ratio = 1) + 
-  ylim(0,6.7) + 
+  ylim(0,7.2) + 
   labs(x = "", y = "Shannon Diversity Index") +
-  geom_bracket(xmin = "healthy_pouch", xmax = "UC", y.position = 4.8,
-               label = "p[adj] < 0.0001", label.size = 8/.pt, family = "Times New Roman", type = "expression") + 
-  geom_bracket(xmin = "sick_pouch_incl", xmax = "UC", y.position = 5.7,
-               label = "p[adj] < 0.0001", label.size = 8/.pt, family = "Times New Roman", type = "expression") + 
-  geom_bracket(xmin = "healthy_pouch", xmax = "normal_gut", y.position = 6.3,
-               label = "p[adj] < 0.0001", label.size = 8/.pt, family = "Times New Roman", type = "expression") + 
-  geom_bracket(xmin = "sick_pouch_incl", xmax = "normal_gut", y.position = 6.8,
-               label = "p[adj] < 0.0001", label.size = 8/.pt, family = "Times New Roman", type = "expression") +
-  geom_bracket(xmin = "UC", xmax = "normal_gut", y.position = 5.3,
-               label = "p[adj] < 0.05", label.size = 8/.pt, family = "Times New Roman", type = "expression") + 
+  add_sig_bracket_shannon("healthy_pouch", "UC", 4.8) + 
+  add_sig_bracket_shannon("sick_pouch_incl", "UC", 5.7) + 
+  add_sig_bracket_shannon("healthy_pouch", "normal_gut", 6.3) + 
+  add_sig_bracket_shannon("sick_pouch_incl", "normal_gut", 6.8) +
+  add_sig_bracket_shannon("UC", "normal_gut", 5.3) +
+  add_sig_bracket_shannon("sick_pouch_incl", "healthy_pouch", 2) + 
   labs(title = "B) Shannon Diversity")
-
+  
 shannon_div_plot
-
-
-###################################### 
 
