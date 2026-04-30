@@ -3,44 +3,29 @@ library(ampvis2)
 library(vegan)
 
 
-# Function
-filter_tax_species <- function(dataset) {
-  taxonomic_levels <- strsplit(dataset$clade_name, "\\|")
-  max_level <- max(sapply(taxonomic_levels, length))
-  
-  keep_rows <- logical(nrow(dataset))
-  keep_rows[1] <- TRUE
-  
-  for (i in 2:nrow(dataset)) {
-    levels <- taxonomic_levels[[i]]
-    has_strain <- any(grepl("^t__", levels))
-    
-    if (has_strain) {
-      keep_rows[i] <- TRUE
-    }
-  }
-  
-  filtered_dataset <- dataset[keep_rows, ]
-  return(filtered_dataset)
-}
-
 # Load data
 metadata <- read_delim("data/participant_metadata.csv") %>%  
   select(sample_barcode, id, health_status) 
-metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", skip=1, show_col_types = FALSE) %>%  
+# metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", show_col_types = FALSE) %>%  
+#   rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
+#   filter_tax_species() %>% 
+#   rename_at(vars(-1), ~ sub("_.*$", "", .))
+
+metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", show_col_types = FALSE) %>%
   rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
-  filter_tax_species() %>% 
-  rename_at(vars(-1), ~ sub("_.*$", "", .))
+  mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
+  separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
+  filter(!is.na(Species)) %>%
+  filter(is.na(Strain)) 
 
 
 ## Prepare amp object
 metaphlan_df <- metaphlan %>%  
-  filter(clade_name == "UNCLASSIFIED" | str_detect(clade_name, "s_{2}")) %>%  
+  #filter(clade_name == "UNCLASSIFIED" | str_detect(clade_name, "s_{2}")) %>%  
   mutate(OTU = paste0("OTU", row_number())) %>%  
-  relocate(OTU) %>%  
-  mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED|t__UNCLASSIFIED", clade_name)) %>%
-  separate(clade_name, sep = "\\|", into = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus",
-                                             "Species", "Strain"))
+  relocate(OTU)  
+  # mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED|t__UNCLASSIFIED", clade_name)) %>%
+  # separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") 
 
 otutable <- metaphlan_df %>% 
   select(-Kingdom:-Strain)
@@ -68,7 +53,8 @@ pca <- amp_object %>%
     sample_point_size = 2) + 
   scale_color_manual(name = NULL, 
                      labels = c("SickPouch", "HealthyPouch", "UC", "NormalGut"),
-                     values = c(  "#803E75", "#A6BDD7", "#CEA262",  "#817066"),
+                     #values = c(  "#803E75", "#A6BDD7", "#CEA262",  "#817066"),
+                     values = c(  "#803E75", "#4f6985", "#CEA262",  "#817066"),
                      breaks = c("sick_pouch_incl", "healthy_pouch", "UC", "normal_gut")) + 
   theme(panel.background = element_rect(fill="grey97"),
         panel.grid.major = element_line(color = "grey85"), 
@@ -92,6 +78,15 @@ pca <- amp_object %>%
         aspect.ratio = 1) +
   labs(title = "PCA") 
 
+# ggsave(
+#   filename = "plots/pca_suppl.svg",  # or .pdf, .svg, etc.
+#   plot = pca,
+#   width = 15,
+#   height = 15,       # adjust based on your needs
+#   dpi = 300,          # high resolution for publication
+#   units = "cm"
+# )
+
 rda <- amp_object %>%  
   amp_ordinate(
     type = "rda", 
@@ -105,7 +100,8 @@ rda <- amp_object %>%
     sample_point_size = 2) + 
   scale_color_manual(name = NULL, 
                      labels = c("SickPouch", "HealthyPouch", "UC", "NormalGut"),
-                     values = c(  "#803E75", "#A6BDD7", "#CEA262",  "#817066"),
+                     #values = c(  "#803E75", "#A6BDD7", "#CEA262",  "#817066"),
+                     values = c(  "#803E75", "#4f6985", "#CEA262",  "#817066"),
                      breaks = c("sick_pouch_incl", "healthy_pouch", "UC", "normal_gut")) + 
   theme(panel.background = element_rect(fill="grey97"),
         panel.grid.major = element_line(color = "grey85"), 
@@ -128,11 +124,12 @@ rda <- amp_object %>%
         text = element_text(family = "Times New Roman"), 
         aspect.ratio = 1) +
   labs(title = "D) Redundancy Analysis") 
+rda
 
 
-ggpubr::ggarrange(pca, rda, nrows = 1)
+#ggpubr::ggarrange(pca, rda, nrows = 1)
 
-ggsave(filename = "./figures/pca-rda_short_read.png", device = "png", dpi = "retina", bg = "white")
+#ggsave(filename = "./figures/pca-rda_short_read.png", device = "png", dpi = "retina", bg = "white")
 
 for (i in seq_along(rda$layers)) {
   g <- class(rda$layers[[i]]$geom)[1]
@@ -261,4 +258,34 @@ print(pairwise_results)
 set.seed(42)
 anosim_res <- anosim(dist_hell, health, permutations = 999)
 print(anosim_res)
+
+
+
+
+# Saving panel
+library(patchwork)
+
+layout <- "
+AB
+CD
+"
+
+fig1 <- richness_plot + shannon_div_plot + heatmap_sig + rda +
+  plot_layout(design = layout) &
+  theme(plot.tag = element_text(size = 10, face = "bold", family = "Times New Roman"))
+
+ggsave(
+  filename = "plots/260429_fig1.svg",  # or .pdf, .svg, etc.
+  plot = fig1,
+  width = 23,
+  height = 23,        # adjust based on your needs
+  dpi = 300,          # high resolution for publication
+  units = "cm"
+)
+
+
+
+
+
+
 
