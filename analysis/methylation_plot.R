@@ -1,6 +1,9 @@
 library(tidyverse)
+library(patchwork)
+library(data.table)
+library(ggtext)
 
-bin_quality <- read_delim("/home/projects/cu_00014/people/albmol/healthypouch/HealthyPouch_article/data/mag_qual.tsv") %>%  
+bin_quality <- read_delim("./data/mag_qual.tsv") %>%  
   rename(sample_barcode = sample, 
          mag_quality = mimag) 
 
@@ -212,6 +215,18 @@ motif_labels <- c(
   "TCCANNNNNNNTGC_a_3" = "TCC<sub>6m</sub><b>A</b>(N)<sub>7</sub>TGC",
   "GATC_a_1" = "G<sub>6m</sub><b>A</b>TC")
 
+methylation_theme <- theme(
+    text = element_text(family = "Times New Roman"),
+    plot.title = element_text(face = "bold"),
+    axis.text.x = element_markdown(angle= 45, hjust = 1, vjust = 1, size=12), 
+    axis.text.y = element_markdown(size = 12),
+    plot.background = element_rect(fill = "transparent", color = NA),
+    panel.border = element_blank(),
+    legend.background = element_rect(fill = "transparent", color = NA),
+    legend.box.background = element_rect(fill = "transparent", color = NA), 
+    legend.text = element_text(size = 12), 
+    legend.title = element_text(size = 12, margin = margin(b = 15)))
+
 
 ## Plot
 fig3_plot <- df_plot  %>% 
@@ -229,15 +244,8 @@ fig3_plot <- df_plot  %>%
   scale_x_discrete(labels = motif_labels) + 
   scale_y_discrete(limits = rev(levels(df_final$bin_clean)),
                    labels = bold_labels) +
-  theme(
-    axis.text.x = element_markdown(angle= 45, hjust = 1, vjust = 1, size=12), 
-    axis.text.y = element_markdown(size = 12),
-    plot.background = element_rect(fill = "transparent", color = NA),
-    panel.border = element_blank(),
-    legend.background = element_rect(fill = "transparent", color = NA),
-    legend.box.background = element_rect(fill = "transparent", color = NA), 
-    legend.text = element_text(size = 12), 
-    legend.title = element_text(size = 12, margin = margin(b = 15))) +
+  labs(title = "B) MAG Methylation Patterns") +
+  methylation_theme +
   coord_fixed(ratio = 1) +
   xlab("") +
   ylab("")
@@ -466,21 +474,16 @@ suppl_fig1_plot <- df_plot  %>%
   scale_x_discrete(labels = motif_labels) + 
   scale_y_discrete(limits = rev(levels(df_final$bin_clean)),
                    labels = bold_labels) +
-  theme(
-    axis.text.x = element_markdown(angle= 45, hjust = 1, vjust = 1, size=12), 
-    axis.text.y = element_markdown(size = 12),
-    plot.background = element_rect(fill = "transparent", color = NA),
-    panel.border = element_blank(),
-    legend.background = element_rect(fill = "transparent", color = NA),
-    legend.box.background = element_rect(fill = "transparent", color = NA), 
-    legend.text = element_text(size = 12), 
-    legend.title = element_text(size = 12, margin = margin(b = 15))) +
+  labs(title = "B) MAG Methylation Patterns") +
+  methylation_theme + 
   coord_fixed(ratio = 1) +
   xlab("") +
   ylab("")
 
 suppl_fig1_plot
 
+patchwork::wrap_plots(plasmid_gg + labs(title = "A) Assigned Plasmid Annotation") + theme(text =element_text(family = "Times New Roman"), plot.title = element_text(face = "bold")), suppl_fig1_plot, widths = c(1, 0.6))
+ggsave("./figures/suppl_fig2_plot.png", bg = "white", dpi = "retina", width = 12, height = 6)
 
 
 # Supplementary figure 2. Methylation plot
@@ -703,19 +706,11 @@ suppl_fig2_plot <- df_plot  %>%
   scale_x_discrete(labels = motif_labels) + 
   scale_y_discrete(limits = rev(levels(df_final$bin_clean)),
                    labels = bold_labels) +
-  theme(
-    axis.text.x = element_markdown(angle= 45, hjust = 1, vjust = 1, size=12), 
-    axis.text.y = element_markdown(size = 12),
-    plot.background = element_rect(fill = "transparent", color = NA),
-    panel.border = element_blank(),
-    legend.background = element_rect(fill = "transparent", color = NA),
-    legend.box.background = element_rect(fill = "transparent", color = NA), 
-    legend.text = element_text(size = 12), 
-    legend.title = element_text(size = 12, margin = margin(b = 15))) +
+  labs(title = "B) MAG Methylation Patterns") +
+  methylation_theme +
   coord_fixed(ratio = 1) +
   xlab("") +
   ylab("")
 
-suppl_fig2_plot
-
-
+patchwork::wrap_plots(plasmid_gg + labs(title = "A) Assigned Plasmid Annotation") + theme(text =element_text(family = "Times New Roman"), plot.title = element_text(face = "bold")), suppl_fig2_plot, widths = c(1, 1))
+ggsave("./figures/suppl_fig3_plot.png", bg = "white", dpi = "retina", width = 16, height = 8)
