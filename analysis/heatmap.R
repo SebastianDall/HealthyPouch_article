@@ -7,7 +7,7 @@ library(Maaslin2)
 metadata <- read_delim("data/participant_metadata.csv") %>%  
   select(sample_barcode, id, health_status) 
 
-metaphlan <- read_delim("./data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", show_col_types = FALSE) %>%  
+metaphlan <- read_delim("./data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", skip=1, delim = "\t", show_col_types = FALSE) %>%  
     rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
     mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
     separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%

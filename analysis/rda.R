@@ -6,12 +6,7 @@ library(vegan)
 # Load data
 metadata <- read_delim("data/participant_metadata.csv") %>%  
   select(sample_barcode, id, health_status) 
-# metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", show_col_types = FALSE) %>%  
-#   rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
-#   filter_tax_species() %>% 
-#   rename_at(vars(-1), ~ sub("_.*$", "", .))
-
-metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", delim = "\t", show_col_types = FALSE) %>%
+metaphlan <- read_delim("data/MetaPhlAn_4.1.0_NonHuman_Subsampled_2500000_profile.txt", skip=1, delim = "\t", show_col_types = FALSE) %>%
   rename_with(~ str_remove(.x, "_NonHuman_Combined_Subsampled_2500000")) %>%  
   mutate(clade_name = if_else(clade_name == "UNCLASSIFIED", "k__UNCLASSIFIED|p__UNCLASSIFIED|c__UNCLASSIFIED|o__UNCLASSIFIED|f__UNCLASSIFIED|g__UNCLASSIFIED|s__UNCLASSIFIED", clade_name)) %>%
   separate_wider_delim(clade_name, delim="|", names = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Strain"), too_few = "align_start") %>%
@@ -41,7 +36,7 @@ amp_object <- amp_load(otutable = otutable, metadata = metadata, taxonomy = taxt
 pca <- amp_object %>%  
   amp_ordinate(
     type = "pca", 
-    # transform = "hellinger", 
+    transform = "hellinger", 
     filter_species = 0,
     sample_color_by = "health_status",
     species_plot = T,
@@ -76,7 +71,7 @@ pca <- amp_object %>%
   labs(title = "PCA") 
 
 # ggsave(
-#   filename = "plots/pca_suppl.svg",  # or .pdf, .svg, etc.
+#   filename = "plots/260430_pca_suppl.svg",  # or .pdf, .svg, etc.
 #   plot = pca,
 #   width = 15,
 #   height = 15,       # adjust based on your needs
@@ -273,14 +268,14 @@ fig1 <- richness_plot + shannon_div_plot + heatmap_sig + rda +
   plot_layout(design = layout) &
   theme(plot.tag = element_text(size = 10, face = "bold", family = "Times New Roman"))
 
-ggsave(
-  filename = "plots/260429_fig1.svg",  # or .pdf, .svg, etc.
-  plot = fig1,
-  width = 23,
-  height = 23,        # adjust based on your needs
-  dpi = 300,          # high resolution for publication
-  units = "cm"
-)
+# ggsave(
+#   filename = "plots/260430_fig1.svg",  # or .pdf, .svg, etc.
+#   plot = fig1,
+#   width = 23,
+#   height = 23,        # adjust based on your needs
+#   dpi = 300,          # high resolution for publication
+#   units = "cm"
+# )
 
 
 
