@@ -33,7 +33,8 @@ scripts*
 _pipelines/*
 !_pipelines/.gitkeep
 redo_samples.txt*
-
+figures/*
+!figures/.gitkeep
 
 # History files
 .Rhistory
