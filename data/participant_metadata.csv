@@ -67,7 +67,6 @@ PaPr00000045MP pt006 sick_pouch_incl 55 female 15 15 2 0 2 0 4 0 0 0 0 0 1 2 NA 
 FMTP00000003MP pt006_fmt sick_pouch_incl 62 male NA NA 2 0 2 0 4 0 1 1 1 0 1 NA NA NA "Ciprofloxacin, Metronidazole"
 PaPr00000056MP pt007 sick_pouch_incl 45 male 10 10 2 0 1 0 3 1 1 1 1 0 0 1 NA NA Ciprofloxacin
 PaPr00000064MP pt008 sick_pouch_incl 29 female 10 10 2 1 2 1 6 0 0 0 1 1 1 2 NA NA Metronidazole
-FMTP00000004MP pt008_fmt sick_pouch_incl 46 female NA NA 0 1 1 0 2 1 1 1 0 0 1 2 NA NA "Did not report"
 PaPr00000074MP pt009 sick_pouch_incl 39 female 10 10 2 0 1 0 3 1 1 0 1 0 0 2 NA NA Ciprofloxacin
 PaPr00000085MP pt010 sick_pouch_incl 29 female 12 12 2 0 2 0 4 1 0 1 1 1 0 1 NA NA "Ciprofloxacin, Pivmecillinam"
 FMTP00000005MP pt010_fmt sick_pouch_incl 45 female NA NA 2 0 1 0 3 0 0 0 0 0 1 2 NA NA Metronidazole
