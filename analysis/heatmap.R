@@ -380,9 +380,25 @@ heatmap_sig_data <- aggregated_rab_ordered %>%
     facet_label = factor(facet_label, levels = c("SickPouch", "HealthyPouch", "UC", "NormalGut"))
   )
 
+
 heatmap_sig <- ggplot(heatmap_sig_data, aes(x = health_status, y = species, fill = mean_abundance)) +
   geom_tile() +
-  geom_text(aes(label = tile_label), size = 8/.pt, color = "black", family = "Times New Roman") +
+  #geom_text(aes(label = tile_label), size = 8/.pt, color = "black", family = "Times New Roman") +
+  geom_text(
+    aes(label = mean_abundance),
+    size = 8/.pt,
+    color = "black",
+    family = "Times New Roman"
+  ) +
+  geom_text(
+    aes(label = sig_label),
+    nudge_x = 0.1,
+    hjust = 0,
+    size = 8/.pt,
+    color = "black",
+    family = "Times New Roman",
+    na.rm = TRUE
+  ) +
   facet_grid(. ~ facet_label, scales = "free_x", space = "free") +
   labs(y = "Species", fill = "% relative\n abundance", x = "") +
   scale_y_discrete(limits = levels(aggregated_rab_ordered$species), drop = TRUE) +
@@ -409,9 +425,81 @@ heatmap_sig <- ggplot(heatmap_sig_data, aes(x = health_status, y = species, fill
   guides(fill = guide_legend(reverse = TRUE)) +
   labs(title = "C) Relative Abundance",
        caption = bquote("Significance vs HealthyPouch (MaAsLin2 CLR): * " *p[adj]<0.05 ~", ** " *p[adj]<0.01 ~", *** " *p[adj]<0.001))
-       #caption = expression("Significance vs HealthyPouch (MaAsLin2 CLR): * q<0.05, ** q<0.01, *** q<0.001"))
 heatmap_sig
 
 # ggsave("figures/heatmap_with_significance.png", heatmap_sig,
 #        device = "png", dpi = "retina", bg = "white",
 #        width = 7, height = 5)
+
+
+sig_for_heatmap <- fit$results %>%
+  left_join(taxtable %>% select(OTU, Species) %>% rename(feature = OTU)) %>%
+  mutate(
+    species = str_replace_all(Species, "_", " "),
+    facet_label = case_when(
+      value == "healthy_pouch"   ~ "HealthyPouch",
+      value == "normal_gut"   ~ "NormalGut",
+      value == "sick_pouch_incl" ~ "SickPouch",
+      value == "UC"              ~ "UC"
+    ),
+    sig_label = case_when(
+      qval < 0.001 ~ "***",
+      qval < 0.01  ~ "**",
+      qval < 0.05  ~ "*",
+      TRUE         ~ ""
+    )
+  ) %>%
+  filter(!is.na(facet_label)) %>%
+  select(species, facet_label, qval, sig_label)
+
+heatmap_sig_data <- aggregated_rab_ordered %>%
+  left_join(sig_for_heatmap, by = c("species", "facet_label")) %>%
+  mutate(
+    sig_label = replace_na(sig_label, ""),
+    tile_label = if_else(sig_label == "",
+                         as.character(round(mean_abundance, 2)),
+                         paste0(round(mean_abundance, 2), sig_label)),
+    facet_label = factor(facet_label, levels = c("SickPouch", "HealthyPouch", "UC", "NormalGut"))
+  )
+
+
+heatmap_nosig <- ggplot(heatmap_sig_data, aes(x = health_status, y = species, fill = mean_abundance)) +
+  geom_tile() +
+  geom_text(
+    aes(label = mean_abundance),
+    size = 8/.pt,
+    color = "black",
+    family = "Times New Roman"
+  ) +
+  facet_grid(. ~ facet_label, scales = "free_x", space = "free") +
+  labs(y = "Species", fill = "% relative\n abundance", x = "") +
+  scale_y_discrete(limits = levels(aggregated_rab_ordered$species), drop = TRUE) +
+  scale_fill_gradient(low = "gray90", high = "#8E7A47") +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_text(size = 8, face = "italic", color="black"),
+    axis.ticks.x = element_blank(),
+    axis.title = element_blank(),
+    panel.border = element_rect(color = "grey20", fill = NA, size = 0.5),
+    panel.grid = element_line(color = "grey80"),
+    panel.background = element_rect(fill = "grey97"),
+    plot.background = element_rect(fill = "transparent", color = "transparent"),
+    strip.text = element_text(size = 8),
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    legend.background = element_rect(fill = "transparent", color = "transparent"),
+    legend.position = "bottom",
+    legend.key.height = unit(5, "mm"),
+    legend.key.width  = unit(5, "mm"),
+    legend.box.margin = margin(t = -15, r = 0, b = 0, l = 0),
+    plot.title = element_text(face = "bold", size = 10),
+    text = element_text(family = "Times New Roman")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  labs(title = "C) Relative Abundance",
+       caption = bquote("Significance vs HealthyPouch (MaAsLin2 CLR): * " *p[adj]<0.05 ~", ** " *p[adj]<0.01 ~", *** " *p[adj]<0.001))
+
+
+heatmap_nosig
+
+
+
