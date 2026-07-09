@@ -119,8 +119,6 @@ rda <- amp_object %>%
 rda
 
 
-#ggpubr::ggarrange(pca, rda, nrows = 1)
-
 #ggsave(filename = "./figures/pca-rda_short_read.png", device = "png", dpi = "retina", bg = "white")
 
 ggsave( plot = rda, filename ="./figures/rda.png", device = "png", dpi = "retina", bg = "transparent")
