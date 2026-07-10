@@ -3,8 +3,8 @@ library(circlize)
 library(data.table)
 library(ggplotify)
 
-# Figure 3. Plasmid plot
-sample_barcode <- "PaPr00000001MP"
+# Figure 2. Plasmid plot
+sample_barcode <- "PaPr00000088MP" #change barcode for plasmid generation
 
 mog_results <- fread(file.path("data/plasmid_plot",sample_barcode,"mog.tsv"))
 contig_arg <- fread(file.path("data/plasmid_plot",sample_barcode,"contig_arg.tsv"))
@@ -120,7 +120,8 @@ plasmid_gg <- as.ggplot(function() {
 
 
                             r_inside  <- (gene_rou1 + gene_rou2) / 2 
-                            r_outside <- rou2 - 0.06 
+                            #r_outside <- rou2 - 0.06 
+                            r_outside <- rou2 - 0.08 
 
                             for (i in 1:nrow(mog)) {
 
@@ -161,9 +162,19 @@ plasmid_gg <- as.ggplot(function() {
 
                             op <- par(family = "Times New Roman", ps = 12)
                             on.exit(par(op), add = TRUE)
-                            y_leg = if (sample_barcode == "PaPr00000001MP") {0.15} else {0.45}
-                            legend(x = -0.5, y=y_leg, legend = names(palette), fill = palette, border = "black", cex = 0.8, bg="white", bty = "n")
+                            y_leg = if (sample_barcode == "PaPr00000088MP") {0.35} else {0.45} #change barcode here
+                            legend(x = -0.45, y=y_leg, legend = names(palette), fill = palette, border = "black", cex = 0.8, bg="white", bty = "n")
 
                             # dev.off()
          })
 plasmid_gg
+
+
+# ggsave(
+#   filename = "./plots/PaPr00000088MP_plas.svg",  # or .pdf, .svg, etc.
+#   plot = plasmid_gg,
+#   width = 13,
+#   height = 13,        # adjust based on your needs
+#    dpi = 600,          # high resolution for publication
+#   units = "cm"
+# )

@@ -71,11 +71,11 @@ pca <- amp_object %>%
   labs(title = "PCA") 
 
 # ggsave(
-#   filename = "plots/260430_pca_suppl.svg",  # or .pdf, .svg, etc.
+#   filename = "./plots/260709_pca_suppl.svg",  # or .pdf, .svg, etc.
 #   plot = pca,
 #   width = 15,
 #   height = 15,       # adjust based on your needs
-#   dpi = 300,          # high resolution for publication
+#   dpi = 600,          # high resolution for publication
 #   units = "cm"
 # )
 
@@ -121,7 +121,7 @@ rda
 
 #ggsave(filename = "./figures/pca-rda_short_read.png", device = "png", dpi = "retina", bg = "white")
 
-ggsave( plot = rda, filename ="./figures/rda.png", device = "png", dpi = "retina", bg = "transparent")
+#ggsave( plot = rda, filename ="./figures/rda.png", device = "png", dpi = "retina", bg = "transparent")
 
 for (i in seq_along(rda$layers)) {
   g <- class(rda$layers[[i]]$geom)[1]
@@ -265,13 +265,13 @@ CD
 fig1 <- richness_plot + shannon_div_plot + heatmap_nosig + rda +
   plot_layout(design = layout) &
   theme(plot.tag = element_text(size = 10, face = "bold", family = "Times New Roman"))
-# 
+
 # ggsave(
-#   filename = "plots/260610_fig1.svg",  # or .pdf, .svg, etc.
+#   filename = "./plots/260709_fig1.svg",  # or .pdf, .svg, etc.
 #   plot = fig1,
 #   width = 23,
 #   height = 23,        # adjust based on your needs
-#   dpi = 300,          # high resolution for publication
+#   dpi = 600,          # high resolution for publication
 #   units = "cm"
 # )
 
