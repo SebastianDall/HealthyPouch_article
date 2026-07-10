@@ -7,7 +7,7 @@ bin_quality <- read_delim("./data/mag_qual.tsv") %>%
   rename(sample_barcode = sample, 
          mag_quality = mimag) 
 
-# Figure 3. Methylation plot
+# Figure 2. Methylation plot
 sample_barcode <- "PaPr00000245MP"
 contig2see <- "contig_108"
 sample_barcode_np <- paste0("NP-",sample_barcode) 
@@ -218,9 +218,9 @@ motif_labels <- c(
 methylation_theme <- theme(
     text = element_text(family = "Times New Roman"),
     plot.title = element_text(face = "bold"),
-    axis.text.x = element_markdown(angle= 45, hjust = 1, vjust = 1, size=12), 
-    axis.text.y = element_markdown(size = 12),
-    plot.background = element_rect(fill = "transparent", color = NA),
+    axis.text.x = element_markdown(angle= 45, hjust = 1, vjust = 1, size=12, color="black"), 
+    axis.text.y = element_markdown(size = 12, color="black"),
+    plot.background = element_rect(fill = "transparent", color = "transparent"),
     panel.border = element_blank(),
     legend.background = element_rect(fill = "transparent", color = NA),
     legend.box.background = element_rect(fill = "transparent", color = NA), 
@@ -229,10 +229,10 @@ methylation_theme <- theme(
 
 
 ## Plot
-fig3_plot <- df_plot  %>% 
+fig2_plot <- df_plot  %>% 
   ggplot(aes(x = motif_mod_val, y = bin_clean, fill = median)) + 
   geom_tile(color = "gray") +
-  geom_text(data = df_plot, aes(x = motif_mod_val, y = bin_clean, label = sum_motif_per_bin, color = I(text_color)), size = 3, inherit.aes = FALSE) +
+  geom_text(data = df_plot, aes(x = motif_mod_val, y = bin_clean, label = sum_motif_per_bin, color = I(text_color)), size = 3, family="Times New Roman", inherit.aes = FALSE) +
   scale_fill_gradient(
     name = "Methylation level",
     low = "white",
@@ -245,15 +245,24 @@ fig3_plot <- df_plot  %>%
   scale_y_discrete(limits = rev(levels(df_final$bin_clean)),
                    labels = bold_labels) +
   labs(title = "B) MAG Methylation Patterns") +
+  #labs(title = "A) Assigned Plasmid Annotation") +
   methylation_theme +
   coord_fixed(ratio = 1) +
   xlab("") +
   ylab("")
 
-fig3_plot
+fig2_plot
 
+# ggsave(
+#   filename = "./plots/PaPr00000245MP_meth.svg",  # or .pdf, .svg, etc.
+#   plot = fig2_plot,
+#   width = 22.8,
+#   height = 22.8,        # adjust based on your needs
+#   dpi = 600,          # high resolution for publication
+#   units = "cm"
+# )
 
-# Supplementary figure 1. Methylation plot
+# Supplementary figure 3. Methylation plot
 sample_barcode <- "PaPr00000001MP"
 contig2see <- "contig_21"
 sample_barcode_np <- paste0("NP-",sample_barcode)
@@ -459,10 +468,10 @@ motif_labels <- c(
 )
 
 ## Plot
-suppl_fig1_plot <- df_plot  %>% 
+suppl_fig3_plot <- df_plot  %>% 
   ggplot(aes(x = motif_mod_val, y = bin_clean, fill = median)) + 
   geom_tile(color = "gray") +
-  geom_text(data = df_plot, aes(x = motif_mod_val, y = bin_clean, label = sum_motif_per_bin, color = I(text_color)), size = 3, inherit.aes = FALSE) +
+  geom_text(data = df_plot, aes(x = motif_mod_val, y = bin_clean, label = sum_motif_per_bin, color = I(text_color)), size = 3, family="Times New Roman", inherit.aes = FALSE) +
   scale_fill_gradient(
     name = "Methylation level",
     low = "white",
@@ -475,18 +484,32 @@ suppl_fig1_plot <- df_plot  %>%
   scale_y_discrete(limits = rev(levels(df_final$bin_clean)),
                    labels = bold_labels) +
   labs(title = "B) MAG Methylation Patterns") +
+  #labs(title = "A) Assigned Plasmid Annotation") +
   methylation_theme + 
   coord_fixed(ratio = 1) +
   xlab("") +
   ylab("")
 
-suppl_fig1_plot
+suppl_fig3_plot
 
-patchwork::wrap_plots(plasmid_gg + labs(title = "A) Assigned Plasmid Annotation") + theme(text =element_text(family = "Times New Roman"), plot.title = element_text(face = "bold")), suppl_fig1_plot, widths = c(1, 0.6))
-ggsave("./figures/suppl_fig2_plot.png", bg = "white", dpi = "retina", width = 12, height = 6)
+#patchwork::wrap_plots(plasmid_gg + labs(title = "A) Assigned Plasmid Annotation") + theme(text =element_text(family = "Times New Roman"), plot.title = element_text(face = "bold")), suppl_fig1_plot, widths = c(1, 0.6))
+#ggsave("./figures/suppl_fig2_plot.png", bg = "white", dpi = "retina", width = 12, height = 6)
+
+# ggsave(
+#   filename = "./plots/PaPr00000001MP_meth.svg",  # or .pdf, .svg, etc.
+#   plot = suppl_fig3_plot,
+#   width = 20,
+#   height = 20,        # adjust based on your needs
+#   dpi = 600,          # high resolution for publication
+#   units = "cm"
+# )
 
 
-# Supplementary figure 2. Methylation plot
+
+
+
+
+# Supplementary figure 4. Methylation plot
 sample_barcode <- "PaPr00000088MP"
 contig2see <- "contig_3"
 sample_barcode_np <- paste0("NP-",sample_barcode)
@@ -691,10 +714,10 @@ motif_labels <- c(
 )
 
 ## Plot
-suppl_fig2_plot <- df_plot  %>% 
+suppl_fig4_plot <- df_plot  %>% 
   ggplot(aes(x = motif_mod_val, y = bin_clean, fill = median)) + 
   geom_tile(color = "gray") +
-  geom_text(data = df_plot, aes(x = motif_mod_val, y = bin_clean, label = sum_motif_per_bin, color = I(text_color)), size = 3, inherit.aes = FALSE) +
+  geom_text(data = df_plot, aes(x = motif_mod_val, y = bin_clean, label = sum_motif_per_bin, color = I(text_color)), size = 3, family="Times New Roman", inherit.aes = FALSE) +
   scale_fill_gradient(
     name = "Methylation level",
     low = "white",
@@ -707,10 +730,20 @@ suppl_fig2_plot <- df_plot  %>%
   scale_y_discrete(limits = rev(levels(df_final$bin_clean)),
                    labels = bold_labels) +
   labs(title = "B) MAG Methylation Patterns") +
+  #labs(title = "A) Assigned Plasmid Annotation") +
   methylation_theme +
   coord_fixed(ratio = 1) +
   xlab("") +
   ylab("")
 
-patchwork::wrap_plots(plasmid_gg + labs(title = "A) Assigned Plasmid Annotation") + theme(text =element_text(family = "Times New Roman"), plot.title = element_text(face = "bold")), suppl_fig2_plot, widths = c(1, 1))
-ggsave("./figures/suppl_fig3_plot.png", bg = "white", dpi = "retina", width = 16, height = 8)
+# patchwork::wrap_plots(plasmid_gg + labs(title = "A) Assigned Plasmid Annotation") + theme(text =element_text(family = "Times New Roman"), plot.title = element_text(face = "bold")), suppl_fig2_plot, widths = c(1, 1))
+# ggsave("./figures/suppl_fig3_plot.png", bg = "white", dpi = "retina", width = 16, height = 8)
+
+ggsave(
+  filename = "./plots/PaPr00000088MP_meth.svg",  # or .pdf, .svg, etc.
+  plot = suppl_fig4_plot,
+  width = 24,
+  height = 24,        # adjust based on your needs
+  dpi = 600,          # high resolution for publication
+  units = "cm"
+)

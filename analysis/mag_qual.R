@@ -908,14 +908,14 @@ combined_plot <- p + (p_compare / p_ssu_hq) +
   theme(plot.tag = element_text(size = 10, face = "bold", family = "Times New Roman"))
 combined_plot
 
-ggsave(
-  filename = "./figures/mag_comparison.png",  # or .pdf, .svg, etc.
-  plot = combined_plot,
-  width = 19.8,
-  height = 15,        # adjust based on your needs
-  dpi = 300,          # high resolution for publication
-  units = "cm"
-)
+# ggsave(
+#   filename = "./plots/mag_comparison.tiff",  # or .pdf, .svg, etc.
+#   plot = combined_plot,
+#   width = 19.8,
+#   height = 15,        # adjust based on your needs
+#   dpi = 600,          # high resolution for publication
+#   units = "cm"
+# )
 
 
 
