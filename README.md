@@ -55,5 +55,5 @@ A script can be found with the accession and overview of all uploaded data at: `
 The files `data/hp_included_participants.csv`, `data/PaPr_metadata.tsv`, `data/PaOP_metadata.tsv`, and `data/donor_metadata.tsv` contains a `sample_barcode` column that matches the `sample_title` of the download script.
 
 ## Cite 
-Please cite our preprint: 
-Dall, S. M., Møllekær, A. H., Kousgaard, S. J., Jakobsen, S. S., Larsen, L., Sørensen, B., ... & Albertsen, M. Distinct Microbial and Resistome Signatures Differentiate Healthy and Inflamed Ileal Pouches in Patients with Ulcerative Colitis. *Available at SSRN 6148080.*
+Please cite our published article: 
+Dall, S. M., Møllekær, A. H., Kousgaard, S. J., Jakobsen, S. S., Larsen, L., Sørensen, B., Thorlacius-Ussing, O., & Albertsen, M. (2026). Microbial and antimicrobial resistance signatures differentiate healthy and inflamed ileal pouches in patients with ulcerative colitis. Journal of Crohn's and Colitis, 20(11), jjag150. https://doi.org/10.1093/ecco-jcc/jjag150
